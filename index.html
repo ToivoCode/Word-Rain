@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordregn</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section id="start-screen" class="panel screen active" aria-labelledby="game-title">
+      <p class="eyebrow">Norsk skrivelek</p>
+      <h1 id="game-title">Ordregn</h1>
+      <p class="lead">Skriv ordene før de treffer bakken. En enkel, original skrivelek med norske ord.</p>
+      <button id="start-button" class="primary-button" type="button">Start Game</button>
+    </section>
+
+    <section id="game-screen" class="screen" aria-label="Spillskjerm">
+      <header class="hud panel">
+        <div>
+          <span class="hud-label">Poeng</span>
+          <strong id="score">0</strong>
+        </div>
+        <div>
+          <span class="hud-label">Liv</span>
+          <strong id="lives">5</strong>
+        </div>
+        <div class="typed-display-wrap">
+          <span class="hud-label">Du skriver</span>
+          <strong id="typed-display" class="typed-display">-</strong>
+        </div>
+      </header>
+
+      <section class="arena panel">
+        <div id="word-layer" class="word-layer" aria-live="polite"></div>
+        <div class="ground" aria-hidden="true"></div>
+      </section>
+    </section>
+
+    <section id="game-over-screen" class="panel screen" aria-labelledby="game-over-title">
+      <p class="eyebrow">Runden er over</p>
+      <h2 id="game-over-title">Game Over</h2>
+      <p class="lead">Sluttpoeng: <strong id="final-score">0</strong></p>
+      <button id="restart-button" class="primary-button" type="button">Restart</button>
+    </section>
+  </main>
+
+  <script src="words-no.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
