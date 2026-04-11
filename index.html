@@ -18,7 +18,10 @@
     <section id="game-screen" class="screen" aria-label="Game screen">
       <header class="hud panel">
         <div class="hud-card">
-          <span class="hud-label">Score</span>
+          <span class="hud-label label-with-icon">
+            <span class="simple-icon score-mark" aria-hidden="true">&#9733;</span>
+            Score
+          </span>
           <strong id="score">0</strong>
         </div>
         <div class="hud-card hud-card-wide">
@@ -26,11 +29,17 @@
           <div id="hearts" class="hearts" aria-label="Hearts"></div>
         </div>
         <div class="hud-card">
-          <span class="hud-label">Word Streak</span>
+          <span class="hud-label label-with-icon">
+            <span class="simple-icon flame-mark" aria-hidden="true">&#128293;</span>
+            Word Streak
+          </span>
           <strong id="word-streak">0</strong>
         </div>
         <div class="hud-card">
-          <span class="hud-label">Char Streak</span>
+          <span class="hud-label label-with-icon">
+            <span class="simple-icon spark-mark" aria-hidden="true">&#10022;</span>
+            Char Streak
+          </span>
           <strong id="char-streak">0</strong>
         </div>
         <div class="hud-card">
@@ -60,21 +69,25 @@
         <div class="action-menu">
           <button class="action-button" type="button" data-slot="1">
             <span class="action-number">1</span>
+            <span class="action-icon simple-icon tnt-mark" aria-hidden="true">&#x1F9E8;</span>
             <span class="action-name">TNT</span>
             <span id="count-tnt" class="action-count">x1</span>
           </button>
           <button class="action-button" type="button" data-slot="2">
             <span class="action-number">2</span>
+            <span class="action-icon simple-icon slow-mark" aria-hidden="true">&#8987;</span>
             <span class="action-name">Slow</span>
             <span id="count-slow" class="action-count">x1</span>
           </button>
           <button class="action-button" type="button" data-slot="3">
             <span class="action-number">3</span>
+            <span class="action-icon simple-icon pause-mark" aria-hidden="true">&#9208;</span>
             <span class="action-name">Pause</span>
             <span id="count-pause" class="action-count">x1</span>
           </button>
           <button class="action-button" type="button" data-slot="4">
             <span class="action-number">4</span>
+            <span class="action-icon simple-icon shop-mark" aria-hidden="true">&#x1F6D2;</span>
             <span class="action-name">Shop</span>
             <span class="action-count">open</span>
           </button>
