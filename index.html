@@ -9,28 +9,41 @@
 <body>
   <main class="app-shell">
     <section id="start-screen" class="panel screen active" aria-labelledby="game-title">
-      <p class="eyebrow">Norwegian typing game</p>
-      <h1 id="game-title">Ordregn</h1>
-      <p class="lead">Type the falling words before they reach the bottom. Build streaks, spend streak points, and trigger power-ups from the keyboard.</p>
+      <p class="eyebrow" data-i18n="start.eyebrow">Norsk skrivelek</p>
+      <h1 id="game-title" data-i18n="start.title">Ordregn</h1>
+      <p class="lead" data-i18n="start.lead">Skriv ordene før de treffer bakken. Bygg opp rekker, tjen valuta og bruk hjelpeevner når skjermen blir full.</p>
       <fieldset class="difficulty-picker">
-        <legend class="hud-label">Difficulty</legend>
+        <legend class="hud-label" data-i18n="start.languageLegend">Språk</legend>
+        <label class="difficulty-option">
+          <input type="radio" name="language" value="no" checked>
+          <span class="difficulty-name" data-i18n="start.language.no">Norsk</span>
+          <span class="difficulty-meta" data-i18n="start.language.noMeta">Standard</span>
+        </label>
+        <label class="difficulty-option">
+          <input type="radio" name="language" value="en">
+          <span class="difficulty-name" data-i18n="start.language.en">English</span>
+          <span class="difficulty-meta" data-i18n="start.language.enMeta">Alternative</span>
+        </label>
+      </fieldset>
+      <fieldset class="difficulty-picker">
+        <legend class="hud-label" data-i18n="start.difficultyLegend">Vanskelighetsgrad</legend>
         <label class="difficulty-option">
           <input type="radio" name="difficulty" value="adult" checked>
-          <span class="difficulty-name">Adults</span>
-          <span class="difficulty-meta">100%</span>
+          <span class="difficulty-name" data-i18n="difficulty.adult">Voksne</span>
+          <span class="difficulty-meta" data-i18n="difficulty.adultMeta">100%</span>
         </label>
         <label class="difficulty-option">
           <input type="radio" name="difficulty" value="kids">
-          <span class="difficulty-name">Kids</span>
-          <span class="difficulty-meta">50% speed</span>
+          <span class="difficulty-name" data-i18n="difficulty.kids">Barn</span>
+          <span class="difficulty-meta" data-i18n="difficulty.kidsMeta">50% fart</span>
         </label>
         <label class="difficulty-option">
           <input type="radio" name="difficulty" value="small-kids">
-          <span class="difficulty-name">Small kids</span>
-          <span class="difficulty-meta">25% speed</span>
+          <span class="difficulty-name" data-i18n="difficulty.smallKids">Små barn</span>
+          <span class="difficulty-meta" data-i18n="difficulty.smallKidsMeta">25% fart</span>
         </label>
       </fieldset>
-      <button id="start-button" class="primary-button" type="button">Start Game</button>
+      <button id="start-button" class="primary-button" type="button" data-i18n="start.button">Start spill</button>
     </section>
 
     <section id="game-screen" class="screen" aria-label="Game screen">
@@ -38,37 +51,37 @@
         <div class="hud-card">
           <span class="hud-label label-with-icon">
             <span class="simple-icon score-mark" aria-hidden="true">&#9733;</span>
-            Score
+            <span data-i18n="hud.score">Poeng</span>
           </span>
           <strong id="score">0</strong>
         </div>
         <div class="hud-card">
-          <span class="hud-label">Hearts</span>
+          <span class="hud-label" data-i18n="hud.hearts">Hjerter</span>
           <div id="hearts" class="hearts" aria-label="Hearts"></div>
         </div>
         <div class="hud-card">
           <span class="hud-label label-with-icon">
             <span class="simple-icon flame-mark" aria-hidden="true">&#128293;</span>
-            Word Streak
+            <span data-i18n="hud.wordStreak">Ordrekke</span>
           </span>
           <strong id="word-streak">0</strong>
         </div>
         <div class="hud-card">
           <span class="hud-label label-with-icon">
             <span class="simple-icon spark-mark" aria-hidden="true">&#10022;</span>
-            Char Streak
+            <span data-i18n="hud.charStreak">Tegnrekke</span>
           </span>
           <strong id="char-streak">0</strong>
         </div>
         <div class="hud-card">
           <span class="hud-label label-with-icon">
             <span class="simple-icon accuracy-mark" aria-hidden="true">&#9678;</span>
-            Accuracy
+            <span data-i18n="hud.accuracy">Nøyaktighet</span>
           </span>
           <strong id="accuracy">100%</strong>
         </div>
         <div class="hud-card hud-card-full">
-          <span class="hud-label">Typed</span>
+          <span class="hud-label" data-i18n="hud.typed">Skriver</span>
           <strong id="typed-display" class="typed-display">-</strong>
         </div>
       </header>
@@ -87,26 +100,26 @@
           <button class="action-button" type="button" data-slot="1">
             <span class="action-number">1</span>
             <span class="action-icon simple-icon tnt-mark" aria-hidden="true">&#x1F9E8;</span>
-            <span class="action-name">TNT</span>
+            <span class="action-name" data-i18n="ability.tnt">TNT</span>
             <span id="count-tnt" class="action-count">x1</span>
           </button>
           <button class="action-button" type="button" data-slot="2">
             <span class="action-number">2</span>
             <span class="action-icon simple-icon slow-mark" aria-hidden="true">&#8987;</span>
-            <span class="action-name">Slow</span>
+            <span class="action-name" data-i18n="ability.slow">Sakte</span>
             <span id="count-slow" class="action-count">x1</span>
           </button>
           <button class="action-button" type="button" data-slot="3">
             <span class="action-number">3</span>
             <span class="action-icon simple-icon pause-mark" aria-hidden="true">&#9208;</span>
-            <span class="action-name">Pause</span>
+            <span class="action-name" data-i18n="ability.pause">Pause</span>
             <span id="count-pause" class="action-count">x1</span>
           </button>
           <button class="action-button" type="button" data-slot="4">
             <span class="action-number">4</span>
             <span class="action-icon simple-icon shop-mark" aria-hidden="true">&#x1F6D2;</span>
-            <span class="action-name">Shop</span>
-            <span class="action-count">open</span>
+            <span class="action-name" data-i18n="ability.shop">Butikk</span>
+            <span class="action-count" data-i18n="ability.open">åpne</span>
           </button>
         </div>
       </section>
@@ -114,12 +127,12 @@
       <section class="resource-footer panel" aria-label="Currencies">
         <div class="resource-pill">
           <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span>
-          <span class="resource-label">Gold</span>
+          <span class="resource-label" data-i18n="currency.gold">Gull</span>
           <strong id="word-points">0</strong>
         </div>
         <div class="resource-pill">
           <span class="coin-icon silver" aria-hidden="true">&#x2B24;</span>
-          <span class="resource-label">Silver</span>
+          <span class="resource-label" data-i18n="currency.silver">Sølv</span>
           <strong id="char-points">0</strong>
         </div>
       </section>
@@ -129,39 +142,39 @@
         <div class="shop-dialog panel" role="dialog" aria-modal="true" aria-labelledby="shop-title">
           <div class="shop-header">
             <div>
-              <p class="eyebrow">Paused</p>
-              <h2 id="shop-title">Shop</h2>
+              <p class="eyebrow" data-i18n="shop.paused">Pausert</p>
+              <h2 id="shop-title" data-i18n="shop.title">Butikk</h2>
             </div>
-            <button id="shop-close" class="secondary-button" type="button">Close</button>
+            <button id="shop-close" class="secondary-button" type="button" data-i18n="shop.close">Lukk</button>
           </div>
-          <p class="shop-help">Buy one charge with Gold. Silver converts into Gold automatically at 100 Silver.</p>
+          <p class="shop-help" data-i18n="shop.help">Kjøp én ladning med Gull. Sølv blir automatisk til Gull ved 100 Sølv.</p>
           <div class="shop-grid">
             <article class="shop-item">
-              <h3>TNT Charge</h3>
-              <p>Deletes all active words.</p>
+              <h3 data-i18n="shop.tntTitle">TNT-ladning</h3>
+              <p data-i18n="shop.tntDesc">Fjerner alle aktive ord.</p>
               <div class="shop-actions">
-                <button class="secondary-button" type="button" data-shop-item="tnt">Buy 15 <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
+                <button class="secondary-button" type="button" data-shop-item="tnt"><span data-i18n="shop.buy">Kjøp</span> 15 <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
               </div>
             </article>
             <article class="shop-item">
-              <h3>Slow Charge</h3>
-              <p>Cuts falling speed by 50% for 10 seconds.</p>
+              <h3 data-i18n="shop.slowTitle">Sakte-ladning</h3>
+              <p data-i18n="shop.slowDesc">Halverer farten i 10 sekunder.</p>
               <div class="shop-actions">
-                <button class="secondary-button" type="button" data-shop-item="slow">Buy 5 <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
+                <button class="secondary-button" type="button" data-shop-item="slow"><span data-i18n="shop.buy">Kjøp</span> 5 <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
               </div>
             </article>
             <article class="shop-item">
-              <h3>Pause Charge</h3>
-              <p>Freezes spawn and movement for 10 seconds.</p>
+              <h3 data-i18n="shop.pauseTitle">Pause-ladning</h3>
+              <p data-i18n="shop.pauseDesc">Stopper nye ord og bevegelse i 10 sekunder.</p>
               <div class="shop-actions">
-                <button class="secondary-button" type="button" data-shop-item="pause">Buy 10 <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
+                <button class="secondary-button" type="button" data-shop-item="pause"><span data-i18n="shop.buy">Kjøp</span> 10 <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
               </div>
             </article>
             <article class="shop-item">
-              <h3>Heart</h3>
-              <p>Restore one heart up to the max of 10.</p>
+              <h3 data-i18n="shop.heartTitle">Hjerte</h3>
+              <p data-i18n="shop.heartDesc">Gjenoppretter ett hjerte opp til maks 10.</p>
               <div class="shop-actions">
-                <button class="secondary-button" type="button" data-shop-item="heart">Buy 5 <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
+                <button class="secondary-button" type="button" data-shop-item="heart"><span data-i18n="shop.buy">Kjøp</span> 5 <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
               </div>
             </article>
           </div>
@@ -170,14 +183,15 @@
     </section>
 
     <section id="game-over-screen" class="panel screen" aria-labelledby="game-over-title">
-      <p class="eyebrow">Round complete</p>
-      <h2 id="game-over-title">Game Over</h2>
-      <p class="lead">Final score: <strong id="final-score">0</strong></p>
-      <button id="restart-button" class="primary-button" type="button">Restart</button>
+      <p class="eyebrow" data-i18n="gameOver.eyebrow">Runden er over</p>
+      <h2 id="game-over-title" data-i18n="gameOver.title">Spillet er slutt</h2>
+      <p class="lead"><span data-i18n="gameOver.finalScore">Sluttpoeng:</span> <strong id="final-score">0</strong></p>
+      <button id="restart-button" class="primary-button" type="button" data-i18n="gameOver.restart">Start på nytt</button>
     </section>
   </main>
 
   <script src="words-no.js"></script>
+  <script src="words-en.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@ const gameOverScreen = document.getElementById('game-over-screen');
 const startButton = document.getElementById('start-button');
 const restartButton = document.getElementById('restart-button');
 const difficultyInputs = Array.from(document.querySelectorAll('input[name="difficulty"]'));
+const languageInputs = Array.from(document.querySelectorAll('input[name="language"]'));
 const scoreEl = document.getElementById('score');
 const heartsEl = document.getElementById('hearts');
 const wordStreakEl = document.getElementById('word-streak');
@@ -24,6 +25,7 @@ const shopCloseButton = document.getElementById('shop-close');
 const shopBackdrop = document.querySelector('.shop-backdrop');
 const shopButtons = Array.from(document.querySelectorAll('[data-shop-item]'));
 const wordLayer = document.getElementById('word-layer');
+const translatableEls = Array.from(document.querySelectorAll('[data-i18n]'));
 
 const START_LIVES = 10;
 const BASE_SPAWN_MS = 2100;
@@ -33,10 +35,10 @@ const SCORE_PER_WORD = 10;
 const ABILITY_DURATION_MS = 10000;
 
 const COMMANDS = {
-  1: { keyword: 'tnt', label: 'TNT', inventoryKey: 'tnt' },
-  2: { keyword: 'slow', label: 'Slow', inventoryKey: 'slow' },
-  3: { keyword: 'pause', label: 'Pause', inventoryKey: 'pause' },
-  4: { keyword: 'shop', label: 'Shop', inventoryKey: null }
+  1: { labelKey: 'ability.tnt', inventoryKey: 'tnt' },
+  2: { labelKey: 'ability.slow', inventoryKey: 'slow' },
+  3: { labelKey: 'ability.pause', inventoryKey: 'pause' },
+  4: { labelKey: 'ability.shop', inventoryKey: null }
 };
 
 const SHOP_ITEMS = {
@@ -47,9 +49,144 @@ const SHOP_ITEMS = {
 };
 
 const DIFFICULTIES = {
-  adult: { label: 'Adults', speedMultiplier: 1 },
-  kids: { label: 'Kids', speedMultiplier: 0.5 },
-  'small-kids': { label: 'Small kids', speedMultiplier: 0.25 }
+  adult: { speedMultiplier: 1 },
+  kids: { speedMultiplier: 0.5 },
+  'small-kids': { speedMultiplier: 0.25 }
+};
+
+const TRANSLATIONS = {
+  no: {
+    'start.eyebrow': 'Norsk skrivelek',
+    'start.title': 'Ordregn',
+    'start.lead': 'Skriv ordene før de treffer bakken. Bygg opp rekker, tjen valuta og bruk hjelpeevner når skjermen blir full.',
+    'start.languageLegend': 'Språk',
+    'start.language.no': 'Norsk',
+    'start.language.noMeta': 'Standard',
+    'start.language.en': 'English',
+    'start.language.enMeta': 'Alternativ',
+    'start.difficultyLegend': 'Vanskelighetsgrad',
+    'difficulty.adult': 'Voksne',
+    'difficulty.adultMeta': '100%',
+    'difficulty.kids': 'Barn',
+    'difficulty.kidsMeta': '50% fart',
+    'difficulty.smallKids': 'Små barn',
+    'difficulty.smallKidsMeta': '25% fart',
+    'start.button': 'Start spill',
+    'hud.score': 'Poeng',
+    'hud.hearts': 'Hjerter',
+    'hud.wordStreak': 'Ordrekke',
+    'hud.charStreak': 'Tegnrekke',
+    'hud.accuracy': 'Nøyaktighet',
+    'hud.typed': 'Skriver',
+    'ability.tnt': 'TNT',
+    'ability.slow': 'Sakte',
+    'ability.pause': 'Pause',
+    'ability.shop': 'Butikk',
+    'ability.open': 'åpne',
+    'currency.gold': 'Gull',
+    'currency.silver': 'Sølv',
+    'shop.paused': 'Pausert',
+    'shop.title': 'Butikk',
+    'shop.close': 'Lukk',
+    'shop.help': 'Kjøp én ladning med Gull. Sølv blir automatisk til Gull ved 100 Sølv.',
+    'shop.tntTitle': 'TNT-ladning',
+    'shop.tntDesc': 'Fjerner alle aktive ord.',
+    'shop.slowTitle': 'Sakte-ladning',
+    'shop.slowDesc': 'Halverer farten i 10 sekunder.',
+    'shop.pauseTitle': 'Pause-ladning',
+    'shop.pauseDesc': 'Stopper nye ord og bevegelse i 10 sekunder.',
+    'shop.heartTitle': 'Hjerte',
+    'shop.heartDesc': 'Gjenoppretter ett hjerte opp til maks 10.',
+    'shop.buy': 'Kjøp',
+    'gameOver.eyebrow': 'Runden er over',
+    'gameOver.title': 'Spillet er slutt',
+    'gameOver.finalScore': 'Sluttpoeng:',
+    'gameOver.restart': 'Start på nytt',
+    'title.document': 'Ordregn',
+    'status.noActive': 'Ingen aktiv effekt',
+    'status.shopOpenPaused': 'Butikken er åpen. Spillet er pauset.',
+    'status.shopPrompt': 'Butikken er åpen. Bruk knappene eller trykk Escape for å lukke.',
+    'status.commandPrompt': 'Trykk 1, 2, 3 eller 4 for TNT, Sakte, Pause eller Butikk.',
+    'status.silverConvert': '100 Sølv ble gjort om til 1 Gull.',
+    'status.shopOpened': 'Butikken er åpnet.',
+    'status.noCharges': 'Ingen {item}-ladninger igjen.',
+    'status.tntCleared': 'TNT ryddet brettet.',
+    'status.slowActive': 'Sakte er aktiv i 10 sekunder.',
+    'status.pauseActive': 'Pause er aktiv i 10 sekunder.',
+    'status.notEnoughGold': 'Ikke nok Gull til dette kjøpet.',
+    'status.heartsFull': 'Hjerter er allerede fulle.',
+    'status.bought': 'Kjøpte {item} med Gull.',
+    'status.scoreGain': '+{score} poeng',
+    'status.wrongCharacter': 'Feil tegn. Rekken ble nullstilt.',
+    'status.wordBottom': 'Et ord traff bakken. Rekken ble nullstilt.',
+    'status.backspaceReset': 'Backspace nullstilte rekken.'
+  },
+  en: {
+    'start.eyebrow': 'Typing game',
+    'start.title': 'Word Rain',
+    'start.lead': 'Type the falling words before they hit the ground. Build streaks, earn currency, and use abilities when the screen gets crowded.',
+    'start.languageLegend': 'Language',
+    'start.language.no': 'Norwegian',
+    'start.language.noMeta': 'Default',
+    'start.language.en': 'English',
+    'start.language.enMeta': 'Alternative',
+    'start.difficultyLegend': 'Difficulty',
+    'difficulty.adult': 'Adults',
+    'difficulty.adultMeta': '100%',
+    'difficulty.kids': 'Kids',
+    'difficulty.kidsMeta': '50% speed',
+    'difficulty.smallKids': 'Small kids',
+    'difficulty.smallKidsMeta': '25% speed',
+    'start.button': 'Start Game',
+    'hud.score': 'Score',
+    'hud.hearts': 'Hearts',
+    'hud.wordStreak': 'Word Streak',
+    'hud.charStreak': 'Char Streak',
+    'hud.accuracy': 'Accuracy',
+    'hud.typed': 'Typed',
+    'ability.tnt': 'TNT',
+    'ability.slow': 'Slow',
+    'ability.pause': 'Pause',
+    'ability.shop': 'Shop',
+    'ability.open': 'open',
+    'currency.gold': 'Gold',
+    'currency.silver': 'Silver',
+    'shop.paused': 'Paused',
+    'shop.title': 'Shop',
+    'shop.close': 'Close',
+    'shop.help': 'Buy one charge with Gold. Silver automatically converts into Gold at 100 Silver.',
+    'shop.tntTitle': 'TNT Charge',
+    'shop.tntDesc': 'Deletes all active words.',
+    'shop.slowTitle': 'Slow Charge',
+    'shop.slowDesc': 'Cuts speed in half for 10 seconds.',
+    'shop.pauseTitle': 'Pause Charge',
+    'shop.pauseDesc': 'Stops new words and movement for 10 seconds.',
+    'shop.heartTitle': 'Heart',
+    'shop.heartDesc': 'Restore one heart up to the max of 10.',
+    'shop.buy': 'Buy',
+    'gameOver.eyebrow': 'Round complete',
+    'gameOver.title': 'Game Over',
+    'gameOver.finalScore': 'Final score:',
+    'gameOver.restart': 'Restart',
+    'title.document': 'Word Rain',
+    'status.noActive': 'No active effect',
+    'status.shopOpenPaused': 'Shop open. Game paused.',
+    'status.shopPrompt': 'Shop is open. Use the buttons or press Escape to close.',
+    'status.commandPrompt': 'Press 1, 2, 3, or 4 to trigger TNT, Slow, Pause, or Shop.',
+    'status.silverConvert': '100 Silver converted into 1 Gold.',
+    'status.shopOpened': 'Shop opened.',
+    'status.noCharges': 'No {item} charges left.',
+    'status.tntCleared': 'TNT cleared the board.',
+    'status.slowActive': 'Slow active for 10 seconds.',
+    'status.pauseActive': 'Pause active for 10 seconds.',
+    'status.notEnoughGold': 'Not enough Gold for that purchase.',
+    'status.heartsFull': 'Hearts are already full.',
+    'status.bought': 'Bought {item} with Gold.',
+    'status.scoreGain': '+{score} score',
+    'status.wrongCharacter': 'Wrong character. Streak reset.',
+    'status.wordBottom': 'A word hit the bottom. Streak reset.',
+    'status.backspaceReset': 'Backspace reset the streak.'
+  }
 };
 
 const state = {
@@ -64,6 +201,7 @@ const state = {
   wordPoints: 0,
   charPoints: 0,
   difficultyKey: 'adult',
+  languageKey: 'no',
   statusMessage: '',
   statusKind: '',
   statusUntil: 0,
@@ -92,13 +230,50 @@ function setScreen(name) {
   gameOverScreen.classList.toggle('active', name === 'game-over');
 }
 
+function t(key, replacements = {}) {
+  const table = TRANSLATIONS[state.languageKey] || TRANSLATIONS.no;
+  let value = table[key] || TRANSLATIONS.en[key] || key;
+
+  Object.entries(replacements).forEach(([token, replacement]) => {
+    value = value.replace(`{${token}}`, String(replacement));
+  });
+
+  return value;
+}
+
 function getSelectedDifficultyKey() {
   const selected = difficultyInputs.find((input) => input.checked);
   return selected ? selected.value : 'adult';
 }
 
+function getSelectedLanguageKey() {
+  const selected = languageInputs.find((input) => input.checked);
+  return selected ? selected.value : 'no';
+}
+
 function getDifficulty() {
   return DIFFICULTIES[state.difficultyKey] || DIFFICULTIES.adult;
+}
+
+function getWordList() {
+  return state.languageKey === 'en' ? window.ENGLISH_WORDS : window.NORWEGIAN_WORDS;
+}
+
+function getItemLabel(itemKey) {
+  if (itemKey === 'heart') {
+    return t('shop.heartTitle');
+  }
+
+  return t(`ability.${itemKey}`);
+}
+
+function applyLanguage() {
+  document.documentElement.lang = state.languageKey === 'en' ? 'en' : 'no';
+  document.title = t('title.document');
+  translatableEls.forEach((element) => {
+    element.textContent = t(element.dataset.i18n);
+  });
+  renderHud();
 }
 
 function formatSeconds(ms) {
@@ -133,22 +308,22 @@ function renderHearts() {
 function renderStatus() {
   clearStatusIfExpired();
 
-  let text = 'No active effect';
+  let text = t('status.noActive');
   let kind = '';
 
   if (state.statusMessage) {
     text = state.statusMessage;
     kind = state.statusKind;
   } else if (state.shopOpen) {
-    text = 'Shop open. Game paused.';
+    text = t('status.shopOpenPaused');
     kind = 'warn';
   } else {
     const parts = [];
     if (state.pauseTimer > 0) {
-      parts.push(`Pause ${formatSeconds(state.pauseTimer)}`);
+      parts.push(`${t('ability.pause')} ${formatSeconds(state.pauseTimer)}`);
     }
     if (state.slowTimer > 0) {
-      parts.push(`Slow ${formatSeconds(state.slowTimer)}`);
+      parts.push(`${t('ability.slow')} ${formatSeconds(state.slowTimer)}`);
     }
     if (parts.length > 0) {
       text = parts.join(' | ');
@@ -162,11 +337,11 @@ function renderStatus() {
 
 function renderCommandPrompt() {
   if (state.shopOpen) {
-    commandPromptEl.textContent = 'Shop is open. Use the buttons or press Escape to close.';
+    commandPromptEl.textContent = t('status.shopPrompt');
     return;
   }
 
-  commandPromptEl.textContent = 'Press 1, 2, 3, or 4 to trigger TNT, Slow, Pause, or Shop.';
+  commandPromptEl.textContent = t('status.commandPrompt');
 }
 
 function renderActionButtons() {
@@ -178,6 +353,14 @@ function renderActionButtons() {
 function renderShop() {
   shopOverlay.classList.toggle('active', state.shopOpen);
   shopOverlay.setAttribute('aria-hidden', String(!state.shopOpen));
+}
+
+function getAccuracyPercent() {
+  if (state.attemptedChars === 0) {
+    return 100;
+  }
+
+  return Math.round((state.correctChars / state.attemptedChars) * 100);
 }
 
 function renderHud() {
@@ -231,6 +414,8 @@ function startGame() {
 
   if (state.screen === 'start') {
     state.difficultyKey = getSelectedDifficultyKey();
+    state.languageKey = getSelectedLanguageKey();
+    applyLanguage();
   }
 
   resetGame();
@@ -260,16 +445,17 @@ function createWordElement(text) {
 }
 
 function pickWord() {
-  if (!Array.isArray(window.NORWEGIAN_WORDS) || window.NORWEGIAN_WORDS.length === 0) {
-    return 'ord';
+  const wordList = getWordList();
+  if (!Array.isArray(wordList) || wordList.length === 0) {
+    return 'word';
   }
 
-  if (state.usedWords.length >= window.NORWEGIAN_WORDS.length) {
+  if (state.usedWords.length >= wordList.length) {
     state.usedWords = [];
   }
 
-  const availableWords = window.NORWEGIAN_WORDS.filter((word) => !state.usedWords.includes(word));
-  const source = availableWords.length > 0 ? availableWords : window.NORWEGIAN_WORDS;
+  const availableWords = wordList.filter((word) => !state.usedWords.includes(word));
+  const source = availableWords.length > 0 ? availableWords : wordList;
   const choice = source[Math.floor(Math.random() * source.length)];
   state.usedWords.push(choice);
   return choice;
@@ -285,7 +471,7 @@ function spawnWord() {
   const word = {
     id: state.nextWordId++,
     text,
-    normalizedText: text.toLocaleLowerCase('no-NO'),
+    normalizedText: text.toLocaleLowerCase(state.languageKey === 'en' ? 'en-US' : 'no-NO'),
     x,
     y: -20,
     speed: FALL_SPEED + Math.random() * 18,
@@ -324,7 +510,7 @@ function clearAllWords() {
 }
 
 function normalizeInput(text) {
-  return text.toLocaleLowerCase('no-NO');
+  return text.toLocaleLowerCase(state.languageKey === 'en' ? 'en-US' : 'no-NO');
 }
 
 function findPrefixMatches(prefix) {
@@ -363,15 +549,7 @@ function convertSilverIfNeeded() {
 
   state.charPoints = 0;
   state.wordPoints += 1;
-  showStatus('100 Silver converted into 1 Gold.', 'good', 1400);
-}
-
-function getAccuracyPercent() {
-  if (state.attemptedChars === 0) {
-    return 100;
-  }
-
-  return Math.round((state.correctChars / state.attemptedChars) * 100);
+  showStatus(t('status.silverConvert'), 'good', 1400);
 }
 
 function openShop() {
@@ -394,13 +572,13 @@ function applyAbility(slot) {
 
   if (slot === 4) {
     openShop();
-    showStatus('Shop opened.', 'good', 1400);
+    showStatus(t('status.shopOpened'), 'good', 1400);
     return;
   }
 
   const key = command.inventoryKey;
   if (state.inventory[key] <= 0) {
-    showStatus(`No ${command.label} charges left.`, 'bad');
+    showStatus(t('status.noCharges', { item: getItemLabel(key) }), 'bad');
     return;
   }
 
@@ -409,40 +587,38 @@ function applyAbility(slot) {
   if (slot === 1) {
     state.typedText = '';
     clearAllWords();
-    showStatus('TNT cleared the board.', 'good');
+    showStatus(t('status.tntCleared'), 'good');
   } else if (slot === 2) {
     state.slowTimer = ABILITY_DURATION_MS;
-    showStatus('Slow active for 10 seconds.', 'good');
+    showStatus(t('status.slowActive'), 'good');
   } else if (slot === 3) {
     state.pauseTimer = ABILITY_DURATION_MS;
-    showStatus('Pause active for 10 seconds.', 'warn');
+    showStatus(t('status.pauseActive'), 'warn');
   }
 
   updateWordHighlights();
   renderHud();
 }
 
-function buyShopItem(itemKey, currency) {
+function buyShopItem(itemKey) {
   const item = SHOP_ITEMS[itemKey];
   if (!item) {
     return;
   }
 
-  const cost = item.goldCost;
-
-  if (state.wordPoints < cost) {
-    showStatus('Not enough Gold for that purchase.', 'bad');
+  if (state.wordPoints < item.goldCost) {
+    showStatus(t('status.notEnoughGold'), 'bad');
     renderHud();
     return;
   }
 
   if (itemKey === 'heart' && state.lives >= START_LIVES) {
-    showStatus('Hearts are already full.', 'bad');
+    showStatus(t('status.heartsFull'), 'bad');
     renderHud();
     return;
   }
 
-  state.wordPoints -= cost;
+  state.wordPoints -= item.goldCost;
 
   if (itemKey === 'heart') {
     state.lives += 1;
@@ -450,7 +626,7 @@ function buyShopItem(itemKey, currency) {
     state.inventory[itemKey] += 1;
   }
 
-  showStatus(`Bought ${itemKey} with Gold.`, 'good');
+  showStatus(t('status.bought', { item: getItemLabel(itemKey) }), 'good');
   renderHud();
 }
 
@@ -467,7 +643,7 @@ function trySubmitTypedWord() {
   const scoreGain = SCORE_PER_WORD + (state.wordStreak * 3) + Math.floor(state.charStreak / 5);
   state.score += scoreGain;
   state.typedText = '';
-  showStatus(`+${scoreGain} score`, 'good', 1200);
+  showStatus(t('status.scoreGain', { score: scoreGain }), 'good', 1200);
   renderHud();
   updateWordHighlights();
 }
@@ -476,7 +652,7 @@ function handleWrongCharacter() {
   state.attemptedChars += 1;
   state.typedText = '';
   resetStreaks();
-  showStatus('Wrong character. Streak reset.', 'bad');
+  showStatus(t('status.wrongCharacter'), 'bad');
   renderHud();
   updateWordHighlights();
 }
@@ -485,7 +661,7 @@ function damagePlayer() {
   state.lives -= 1;
   state.typedText = '';
   resetStreaks();
-  showStatus('A word hit the bottom. Streak reset.', 'bad');
+  showStatus(t('status.wordBottom'), 'bad');
   renderHud();
   updateWordHighlights();
 
@@ -579,7 +755,7 @@ function handleNormalTyping(event) {
     if (state.typedText.length > 0) {
       state.typedText = state.typedText.slice(0, -1);
       resetStreaks();
-      showStatus('Backspace reset the streak.', 'warn');
+      showStatus(t('status.backspaceReset'), 'warn');
       renderHud();
       updateWordHighlights();
     }
@@ -597,7 +773,11 @@ function handleNormalTyping(event) {
     return;
   }
 
-  if (!/^[a-zA-Z\u00C6\u00D8\u00C5\u00E6\u00F8\u00E5]$/.test(event.key)) {
+  const allowedPattern = state.languageKey === 'en'
+    ? /^[a-zA-Z]$/
+    : /^[a-zA-Z\u00C6\u00D8\u00C5\u00E6\u00F8\u00E5]$/;
+
+  if (!allowedPattern.test(event.key)) {
     return;
   }
 
@@ -660,10 +840,18 @@ shopButtons.forEach((button) => {
     buyShopItem(button.dataset.shopItem);
   });
 });
+languageInputs.forEach((input) => {
+  input.addEventListener('change', () => {
+    if (state.screen === 'start') {
+      state.languageKey = getSelectedLanguageKey();
+      applyLanguage();
+    }
+  });
+});
 window.addEventListener('keydown', handleKeydown);
 window.addEventListener('resize', () => {
   state.words.forEach((word) => updateWordPosition(word));
 });
 
 setScreen('start');
-renderHud();
+applyLanguage();
