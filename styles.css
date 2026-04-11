@@ -160,9 +160,10 @@ h3 {
 
 .hud {
   display: grid;
-  grid-template-columns: 1.1fr 1.9fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 2.6fr 1fr 1fr 1fr;
   gap: 12px;
   padding: 18px 20px;
+  align-items: stretch;
 }
 
 .hud-card {
@@ -171,10 +172,6 @@ h3 {
   border-radius: 16px;
   padding: 14px 16px;
   min-height: 86px;
-}
-
-.hud-card-wide {
-  grid-column: span 2;
 }
 
 .hud-card-full {
@@ -512,7 +509,6 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .hud-card-wide,
   .hud-card-full {
     grid-column: auto;
   }
