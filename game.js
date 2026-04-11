@@ -419,7 +419,7 @@ function buyShopItem(itemKey, currency) {
   const currentPoints = usingWordPoints ? state.wordPoints : state.charPoints;
 
   if (currentPoints < cost) {
-    showStatus('Not enough points for that purchase.', 'bad');
+    showStatus(`Not enough ${usingWordPoints ? 'Gold' : 'Silver'} for that purchase.`, 'bad');
     renderHud();
     return;
   }
@@ -442,7 +442,7 @@ function buyShopItem(itemKey, currency) {
     state.inventory[itemKey] += 1;
   }
 
-  showStatus(`Bought ${itemKey} with ${usingWordPoints ? 'Word Points' : 'Char Points'}.`, 'good');
+  showStatus(`Bought ${itemKey} with ${usingWordPoints ? 'Gold' : 'Silver'}.`, 'good');
   renderHud();
 }
 
