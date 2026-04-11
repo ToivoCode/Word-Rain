@@ -53,8 +53,6 @@ const state = {
   charStreak: 0,
   wordPoints: 0,
   charPoints: 0,
-  activeCommandSlot: null,
-  commandText: '',
   statusMessage: '',
   statusKind: '',
   statusUntil: 0,
@@ -148,30 +146,13 @@ function renderCommandPrompt() {
     return;
   }
 
-  if (state.activeCommandSlot) {
-    const command = COMMANDS[state.activeCommandSlot];
-    const typed = state.commandText ? state.commandText.toUpperCase() : '...';
-    commandPromptEl.textContent = `Command ${state.activeCommandSlot}: type ${command.keyword.toUpperCase()} -> ${typed}`;
-    return;
-  }
-
-  if (state.pauseTimer > 0) {
-    commandPromptEl.textContent = 'Pause is active. Abilities can still be armed.';
-    return;
-  }
-
-  commandPromptEl.textContent = 'Press 1-4, then type the command name.';
+  commandPromptEl.textContent = 'Press 1, 2, 3, or 4 to trigger TNT, Slow, Pause, or Shop.';
 }
 
 function renderActionButtons() {
   countTntEl.textContent = `x${state.inventory.tnt}`;
   countSlowEl.textContent = `x${state.inventory.slow}`;
   countPauseEl.textContent = `x${state.inventory.pause}`;
-
-  actionButtons.forEach((button) => {
-    const slot = Number(button.dataset.slot);
-    button.classList.toggle('active', slot === state.activeCommandSlot);
-  });
 }
 
 function renderShop() {
@@ -201,8 +182,6 @@ function resetGame() {
   state.charStreak = 0;
   state.wordPoints = 0;
   state.charPoints = 0;
-  state.activeCommandSlot = null;
-  state.commandText = '';
   state.statusMessage = '';
   state.statusKind = '';
   state.statusUntil = 0;
@@ -241,8 +220,6 @@ function endGame() {
   }
 
   state.shopOpen = false;
-  state.activeCommandSlot = null;
-  state.commandText = '';
   finalScoreEl.textContent = String(state.score);
   renderHud();
   setScreen('game-over');
@@ -352,16 +329,8 @@ function resetStreaks() {
   state.charStreak = 0;
 }
 
-function cancelCommandMode() {
-  state.activeCommandSlot = null;
-  state.commandText = '';
-  renderHud();
-}
-
 function openShop() {
   state.shopOpen = true;
-  state.activeCommandSlot = null;
-  state.commandText = '';
   state.typedText = '';
   updateWordHighlights();
   renderHud();
@@ -562,60 +531,6 @@ function gameLoop(timestamp) {
   state.loopId = window.requestAnimationFrame(gameLoop);
 }
 
-function activateCommandSlot(slot) {
-  if (!COMMANDS[slot]) {
-    return;
-  }
-
-  state.activeCommandSlot = slot;
-  state.commandText = '';
-  state.typedText = '';
-  updateWordHighlights();
-  renderHud();
-}
-
-function handleCommandKeydown(event) {
-  const slot = state.activeCommandSlot;
-  const command = COMMANDS[slot];
-  if (!command) {
-    return;
-  }
-
-  if (event.key === 'Escape') {
-    cancelCommandMode();
-    return;
-  }
-
-  if (event.key === 'Backspace') {
-    event.preventDefault();
-    state.commandText = state.commandText.slice(0, -1);
-    renderHud();
-    return;
-  }
-
-  if (event.key.length !== 1 || !/^[a-zA-Z]$/.test(event.key)) {
-    return;
-  }
-
-  const nextText = `${state.commandText}${event.key.toLowerCase()}`;
-  if (!command.keyword.startsWith(nextText)) {
-    state.commandText = '';
-    showStatus('Wrong command text.', 'bad');
-    renderHud();
-    return;
-  }
-
-  state.commandText = nextText;
-  if (state.commandText === command.keyword) {
-    state.activeCommandSlot = null;
-    state.commandText = '';
-    applyAbility(slot);
-    return;
-  }
-
-  renderHud();
-}
-
 function handleNormalTyping(event) {
   if (event.key === 'Backspace') {
     event.preventDefault();
@@ -676,13 +591,8 @@ function handleKeydown(event) {
     return;
   }
 
-  if (state.activeCommandSlot) {
-    handleCommandKeydown(event);
-    return;
-  }
-
   if (/^[1-4]$/.test(event.key)) {
-    activateCommandSlot(Number(event.key));
+    applyAbility(Number(event.key));
     return;
   }
 
@@ -696,7 +606,7 @@ shopBackdrop.addEventListener('click', closeShop);
 actionButtons.forEach((button) => {
   button.addEventListener('click', () => {
     if (state.screen === 'playing' && !state.shopOpen) {
-      activateCommandSlot(Number(button.dataset.slot));
+      applyAbility(Number(button.dataset.slot));
     }
   });
 });
