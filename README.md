@@ -1,17 +1,24 @@
 # Ordregn
 
-Ordregn is a small browser typing game. Norwegian words fall from the top of the screen, and your job is to type them before they reach the ground.
+Ordregn is a small browser typing game. Words fall from the top of the screen, and your job is to type them before they hit the ground.
 
-The game is designed to be easy to run and easy to understand: open it through a small local static server and play directly in the browser.
+The game is designed to be easy to run and easy to understand: open it through a local static server and play directly in the browser.
+
+## Run Locally
+
+Open the game from a static web server, for example:
+- `python -m http.server 8000`
+
+Then open `http://localhost:8000` and start playing.
 
 ## How The Game Works
 
 Words appear over time and slowly fall downward.
 
-You type letters on the keyboard to match active words on the screen.
+Type letters on the keyboard to match active words on the screen.
 
 When your current input matches a full active word:
-- that word disappears
+- the word disappears
 - your score increases
 - your streaks can improve your reward
 - you earn 1 Gold
@@ -22,13 +29,18 @@ If a word reaches the bottom:
 
 The round ends when all hearts are gone.
 
-## Main Goal
+## Game Options
 
-The main goal is to survive as long as possible while building score through clean typing and smart use of abilities.
+Before starting, choose:
 
-You are rewarded both for:
-- finishing full words correctly
-- maintaining long runs of correct characters without mistakes
+- Language: Norwegian or English
+- Difficulty: Adults, Kids, or Small Kids
+
+Difficulty changes the falling speed:
+
+- Adults: normal speed
+- Kids: 50% speed
+- Small Kids: 25% speed
 
 ## Lives
 
@@ -37,14 +49,13 @@ Lives are shown as hearts at the top of the screen.
 - You start with 10 hearts.
 - Each missed word removes 1 heart.
 - If you lose all hearts, the game is over.
-- Hearts can be restored from the shop, up to the maximum of 10.
+- Hearts can be restored from the shop, up to a maximum of 10.
 
-## Typing
+## Typing Controls
 
 The `Typed` field shows your current input.
 
-General typing behavior:
-- Type letters normally to match falling words.
+- Type letters to match falling words.
 - Norwegian letters such as `æ`, `ø`, and `å` are supported.
 - `Backspace` removes one typed character.
 - `Escape` clears your current typed input.
@@ -55,26 +66,22 @@ If your typed input no longer matches the start of any active word:
 
 ## Streaks
 
-Ordregn uses two different streak systems.
+Ordregn uses two streak systems.
 
 ### Word Streak
 
-Word Streak increases when you complete words cleanly in sequence.
+Increases when you complete words cleanly in sequence.
 
-It rewards consistency across whole words.
-
-Word Streak resets when:
+Resets when:
 - you type a wrong character
 - you use `Backspace`
 - a word reaches the bottom
 
 ### Char Streak
 
-Char Streak increases for each correct character typed while your input remains valid.
+Increases for each correct character typed while your input remains valid.
 
-It rewards precision and uninterrupted typing.
-
-Char Streak resets when:
+Resets when:
 - you type a wrong character
 - you use `Backspace`
 - a word reaches the bottom
@@ -87,33 +94,33 @@ It is calculated from:
 - correct typed characters
 - total attempted typed characters
 
-Correct letters improve accuracy. Wrong letters reduce it.
+Correct letters improve accuracy. Wrong letters lower it.
 
-Backspace and clearing input do not count as fresh attempts.
+Backspace and clearing input do not count as new attempts.
 
 ## Score
 
 Score is based on completed words, but streaks make successful words more valuable.
 
-Each completed word gives:
+Each completed word grants:
 - a base score reward
-- an extra bonus from Word Streak
-- an extra bonus from Char Streak
+- extra bonus from Word Streak
+- extra bonus from Char Streak
 
-This means clean, mistake-free typing is worth much more than simply surviving.
+Clean, mistake-free typing is worth much more than simply surviving.
 
-## Gold And Silver
+## Gold and Silver
 
 The game has two currencies:
 
-- `🪙 Gold`
-- `⬤ Silver`
+- `Gold`
+- `Silver`
 
 ### Gold
 
 You earn `1 Gold` for every completed word.
 
-Gold is the only currency used in the shop.
+Gold is used in the shop.
 
 ### Silver
 
@@ -123,44 +130,40 @@ When Silver reaches `100`:
 - Silver resets to `0`
 - you automatically gain `1 Gold`
 
-This makes Silver a secondary progress currency that slowly turns into Gold over time.
+Silver is a secondary progress currency that slowly converts into Gold.
 
 ## Abilities
 
-At the bottom of the screen there is an action bar with four abilities:
+At the bottom of the screen there is an action bar with four options:
 
 - `1` TNT
 - `2` Slow
 - `3` Pause
 - `4` Shop
 
-You only need to press the number key.
-
-You can also click the buttons in the action bar.
+You can press the number key or click the buttons.
 
 ### TNT
 
-TNT removes all active words from the screen immediately.
+Removes all active words from the screen immediately.
 
 Use it when the board becomes too crowded.
 
 ### Slow
 
-Slow reduces falling speed by 50% for 10 seconds.
+Halves falling speed for 10 seconds.
 
-This gives you more time to clear difficult clusters of words.
+Use it to buy time on difficult word clusters.
 
 ### Pause
 
-Pause stops words from falling and stops new words from spawning for 10 seconds.
+Stops word movement and spawning for 10 seconds.
 
-Important:
-- you can still type and clear words during Pause
-- this makes Pause a catch-up tool rather than a full stop
+You can still type and clear words during Pause, so it is a catch-up tool.
 
 ### Shop
 
-Shop opens the upgrade menu.
+Opens the upgrade menu and pauses the game.
 
 While the shop is open:
 - gameplay is paused
@@ -169,7 +172,7 @@ While the shop is open:
 
 ## Starting Ability Charges
 
-At the beginning of a new game, you start with:
+At the beginning of each game, you start with:
 
 - 1 TNT charge
 - 1 Slow charge
@@ -182,22 +185,23 @@ Additional charges can be bought in the shop.
 The shop lets you spend Gold on extra charges and recovery.
 
 Available purchases:
-
 - TNT charge
 - Slow charge
 - Pause charge
 - 1 Heart
 
 Current shop prices:
-
-- TNT: `15 Gold`
-- Pause: `10 Gold`
-- Slow: `5 Gold`
-- Heart: `5 Gold`
+- TNT: 15 Gold
+- Slow: 5 Gold
+- Pause: 10 Gold
+- Heart: 5 Gold
 
 If your hearts are already full, you cannot buy another heart.
 
-## Difficulty
+## Notes
+
+The game currently supports Norwegian and English word sets and includes an easy mode for younger players.
+
 
 The game becomes harder over time.
 
