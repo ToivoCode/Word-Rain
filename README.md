@@ -14,6 +14,7 @@ When your current input matches a full active word:
 - that word disappears
 - your score increases
 - your streaks can improve your reward
+- you earn 1 Gold
 
 If a word reaches the bottom:
 - you lose one heart
@@ -78,6 +79,18 @@ Char Streak resets when:
 - you use `Backspace`
 - a word reaches the bottom
 
+## Accuracy
+
+Accuracy is shown as a percentage in the top HUD.
+
+It is calculated from:
+- correct typed characters
+- total attempted typed characters
+
+Correct letters improve accuracy. Wrong letters reduce it.
+
+Backspace and clearing input do not count as fresh attempts.
+
 ## Score
 
 Score is based on completed words, but streaks make successful words more valuable.
@@ -98,13 +111,19 @@ The game has two currencies:
 
 ### Gold
 
-Gold is tied more closely to successful word completion and streak progress.
+You earn `1 Gold` for every completed word.
+
+Gold is the only currency used in the shop.
 
 ### Silver
 
-Silver is tied more closely to clean character-by-character typing.
+You earn `1 Silver` for every correct typed character.
 
-Both currencies are used in the shop.
+When Silver reaches `100`:
+- Silver resets to `0`
+- you automatically gain `1 Gold`
+
+This makes Silver a secondary progress currency that slowly turns into Gold over time.
 
 ## Abilities
 
@@ -115,7 +134,7 @@ At the bottom of the screen there is an action bar with four abilities:
 - `3` Pause
 - `4` Shop
 
-You only need to press the number key. No extra typing is required.
+You only need to press the number key.
 
 You can also click the buttons in the action bar.
 
@@ -160,7 +179,7 @@ Additional charges can be bought in the shop.
 
 ## Shop
 
-The shop lets you spend Gold or Silver on extra charges and recovery.
+The shop lets you spend Gold on extra charges and recovery.
 
 Available purchases:
 
@@ -171,10 +190,10 @@ Available purchases:
 
 Current shop prices:
 
-- TNT: `4 Gold` or `18 Silver`
-- Slow: `3 Gold` or `14 Silver`
-- Pause: `5 Gold` or `22 Silver`
-- Heart: `2 Gold` or `10 Silver`
+- TNT: `15 Gold`
+- Pause: `10 Gold`
+- Slow: `5 Gold`
+- Heart: `5 Gold`
 
 If your hearts are already full, you cannot buy another heart.
 

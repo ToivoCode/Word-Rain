@@ -39,10 +39,10 @@ const COMMANDS = {
 };
 
 const SHOP_ITEMS = {
-  tnt: { wordCost: 4, charCost: 18 },
-  slow: { wordCost: 3, charCost: 14 },
-  pause: { wordCost: 5, charCost: 22 },
-  heart: { wordCost: 2, charCost: 10 }
+  tnt: { goldCost: 15 },
+  slow: { goldCost: 5 },
+  pause: { goldCost: 10 },
+  heart: { goldCost: 5 }
 };
 
 const state = {
@@ -335,6 +335,16 @@ function resetStreaks() {
   state.charStreak = 0;
 }
 
+function convertSilverIfNeeded() {
+  if (state.charPoints < 100) {
+    return;
+  }
+
+  state.charPoints = 0;
+  state.wordPoints += 1;
+  showStatus('100 Silver converted into 1 Gold.', 'good', 1400);
+}
+
 function getAccuracyPercent() {
   if (state.attemptedChars === 0) {
     return 100;
@@ -397,12 +407,10 @@ function buyShopItem(itemKey, currency) {
     return;
   }
 
-  const usingWordPoints = currency === 'word';
-  const cost = usingWordPoints ? item.wordCost : item.charCost;
-  const currentPoints = usingWordPoints ? state.wordPoints : state.charPoints;
+  const cost = item.goldCost;
 
-  if (currentPoints < cost) {
-    showStatus(`Not enough ${usingWordPoints ? 'Gold' : 'Silver'} for that purchase.`, 'bad');
+  if (state.wordPoints < cost) {
+    showStatus('Not enough Gold for that purchase.', 'bad');
     renderHud();
     return;
   }
@@ -413,11 +421,7 @@ function buyShopItem(itemKey, currency) {
     return;
   }
 
-  if (usingWordPoints) {
-    state.wordPoints -= cost;
-  } else {
-    state.charPoints -= cost;
-  }
+  state.wordPoints -= cost;
 
   if (itemKey === 'heart') {
     state.lives += 1;
@@ -425,7 +429,7 @@ function buyShopItem(itemKey, currency) {
     state.inventory[itemKey] += 1;
   }
 
-  showStatus(`Bought ${itemKey} with ${usingWordPoints ? 'Gold' : 'Silver'}.`, 'good');
+  showStatus(`Bought ${itemKey} with Gold.`, 'good');
   renderHud();
 }
 
@@ -438,7 +442,7 @@ function trySubmitTypedWord() {
 
   removeWord(matchedWord.id);
   state.wordStreak += 1;
-  state.wordPoints += state.wordStreak;
+  state.wordPoints += 1;
   const scoreGain = SCORE_PER_WORD + (state.wordStreak * 3) + Math.floor(state.charStreak / 5);
   state.score += scoreGain;
   state.typedText = '';
@@ -587,6 +591,7 @@ function handleNormalTyping(event) {
   state.typedText = nextTyped;
   state.charStreak += 1;
   state.charPoints += 1;
+  convertSilverIfNeeded();
   renderHud();
   trySubmitTypedWord();
   updateWordHighlights();
@@ -629,7 +634,7 @@ actionButtons.forEach((button) => {
 });
 shopButtons.forEach((button) => {
   button.addEventListener('click', () => {
-    buyShopItem(button.dataset.shopItem, button.dataset.currency);
+    buyShopItem(button.dataset.shopItem);
   });
 });
 window.addEventListener('keydown', handleKeydown);
