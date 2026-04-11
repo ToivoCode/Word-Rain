@@ -160,7 +160,7 @@ h3 {
 
 .hud {
   display: grid;
-  grid-template-columns: 1.2fr 1.8fr 1fr 1fr;
+  grid-template-columns: 1.1fr 1.9fr 1fr 1fr 1fr;
   gap: 12px;
   padding: 18px 20px;
 }
@@ -231,6 +231,10 @@ h3 {
 
 .pause-mark {
   color: #59648c;
+}
+
+.accuracy-mark {
+  color: #2f7a57;
 }
 
 .shop-mark {
@@ -410,7 +414,7 @@ h3 {
 
 .resource-footer {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 12px;
   padding: 12px 18px;
   background: rgba(255, 252, 246, 0.78);

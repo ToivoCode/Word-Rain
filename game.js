@@ -7,6 +7,7 @@ const scoreEl = document.getElementById('score');
 const heartsEl = document.getElementById('hearts');
 const wordStreakEl = document.getElementById('word-streak');
 const charStreakEl = document.getElementById('char-streak');
+const accuracyEl = document.getElementById('accuracy');
 const wordPointsEl = document.getElementById('word-points');
 const charPointsEl = document.getElementById('char-points');
 const typedDisplayEl = document.getElementById('typed-display');
@@ -51,6 +52,8 @@ const state = {
   typedText: '',
   wordStreak: 0,
   charStreak: 0,
+  correctChars: 0,
+  attemptedChars: 0,
   wordPoints: 0,
   charPoints: 0,
   statusMessage: '',
@@ -164,6 +167,7 @@ function renderHud() {
   scoreEl.textContent = String(state.score);
   wordStreakEl.textContent = String(state.wordStreak);
   charStreakEl.textContent = String(state.charStreak);
+  accuracyEl.textContent = `${getAccuracyPercent()}%`;
   wordPointsEl.textContent = String(state.wordPoints);
   charPointsEl.textContent = String(state.charPoints);
   typedDisplayEl.textContent = state.typedText || '-';
@@ -180,6 +184,8 @@ function resetGame() {
   state.typedText = '';
   state.wordStreak = 0;
   state.charStreak = 0;
+  state.correctChars = 0;
+  state.attemptedChars = 0;
   state.wordPoints = 0;
   state.charPoints = 0;
   state.statusMessage = '';
@@ -329,6 +335,14 @@ function resetStreaks() {
   state.charStreak = 0;
 }
 
+function getAccuracyPercent() {
+  if (state.attemptedChars === 0) {
+    return 100;
+  }
+
+  return Math.round((state.correctChars / state.attemptedChars) * 100);
+}
+
 function openShop() {
   state.shopOpen = true;
   state.typedText = '';
@@ -434,6 +448,7 @@ function trySubmitTypedWord() {
 }
 
 function handleWrongCharacter() {
+  state.attemptedChars += 1;
   state.typedText = '';
   resetStreaks();
   showStatus('Wrong character. Streak reset.', 'bad');
@@ -567,6 +582,8 @@ function handleNormalTyping(event) {
     return;
   }
 
+  state.attemptedChars += 1;
+  state.correctChars += 1;
   state.typedText = nextTyped;
   state.charStreak += 1;
   state.charPoints += 1;
