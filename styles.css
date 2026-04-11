@@ -113,6 +113,47 @@ h3 {
   margin-bottom: 32px;
 }
 
+.difficulty-picker {
+  margin: 0 0 28px;
+  padding: 0;
+  border: 0;
+  text-align: left;
+}
+
+.difficulty-picker .hud-label {
+  margin-bottom: 10px;
+}
+
+.difficulty-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(84, 88, 102, 0.1);
+  background: rgba(255, 255, 255, 0.68);
+  cursor: pointer;
+}
+
+.difficulty-option + .difficulty-option {
+  margin-top: 10px;
+}
+
+.difficulty-option input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.difficulty-name {
+  font-weight: 700;
+}
+
+.difficulty-meta {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 .primary-button,
 .secondary-button,
 .action-button {

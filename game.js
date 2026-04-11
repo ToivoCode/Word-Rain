@@ -3,6 +3,7 @@ const gameScreen = document.getElementById('game-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
 const startButton = document.getElementById('start-button');
 const restartButton = document.getElementById('restart-button');
+const difficultyInputs = Array.from(document.querySelectorAll('input[name="difficulty"]'));
 const scoreEl = document.getElementById('score');
 const heartsEl = document.getElementById('hearts');
 const wordStreakEl = document.getElementById('word-streak');
@@ -45,6 +46,12 @@ const SHOP_ITEMS = {
   heart: { goldCost: 5 }
 };
 
+const DIFFICULTIES = {
+  adult: { label: 'Adults', speedMultiplier: 1 },
+  kids: { label: 'Kids', speedMultiplier: 0.5 },
+  'small-kids': { label: 'Small kids', speedMultiplier: 0.25 }
+};
+
 const state = {
   screen: 'start',
   score: 0,
@@ -56,6 +63,7 @@ const state = {
   attemptedChars: 0,
   wordPoints: 0,
   charPoints: 0,
+  difficultyKey: 'adult',
   statusMessage: '',
   statusKind: '',
   statusUntil: 0,
@@ -82,6 +90,15 @@ function setScreen(name) {
   startScreen.classList.toggle('active', name === 'start');
   gameScreen.classList.toggle('active', name === 'playing');
   gameOverScreen.classList.toggle('active', name === 'game-over');
+}
+
+function getSelectedDifficultyKey() {
+  const selected = difficultyInputs.find((input) => input.checked);
+  return selected ? selected.value : 'adult';
+}
+
+function getDifficulty() {
+  return DIFFICULTIES[state.difficultyKey] || DIFFICULTIES.adult;
 }
 
 function formatSeconds(ms) {
@@ -210,6 +227,10 @@ function startGame() {
   if (state.loopId) {
     window.cancelAnimationFrame(state.loopId);
     state.loopId = null;
+  }
+
+  if (state.screen === 'start') {
+    state.difficultyKey = getSelectedDifficultyKey();
   }
 
   resetGame();
@@ -536,15 +557,17 @@ function gameLoop(timestamp) {
     state.slowTimer = Math.max(0, state.slowTimer - deltaMs);
   }
 
-  state.spawnTimer += deltaMs;
+  const difficultySpeed = getDifficulty().speedMultiplier;
+
+  state.spawnTimer += deltaMs * difficultySpeed;
   if (state.spawnTimer >= state.spawnInterval) {
     state.spawnTimer = 0;
     spawnWord();
   }
 
-  updateDifficulty(deltaMs);
+  updateDifficulty(deltaMs * difficultySpeed);
   const speedMultiplier = state.slowTimer > 0 ? 0.5 : 1;
-  updateFallingWords(deltaSeconds * speedMultiplier);
+  updateFallingWords(deltaSeconds * speedMultiplier * difficultySpeed);
   updateWordHighlights();
   renderHud();
   state.loopId = window.requestAnimationFrame(gameLoop);

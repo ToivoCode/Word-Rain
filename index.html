@@ -12,6 +12,24 @@
       <p class="eyebrow">Norwegian typing game</p>
       <h1 id="game-title">Ordregn</h1>
       <p class="lead">Type the falling words before they reach the bottom. Build streaks, spend streak points, and trigger power-ups from the keyboard.</p>
+      <fieldset class="difficulty-picker">
+        <legend class="hud-label">Difficulty</legend>
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="adult" checked>
+          <span class="difficulty-name">Adults</span>
+          <span class="difficulty-meta">100%</span>
+        </label>
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="kids">
+          <span class="difficulty-name">Kids</span>
+          <span class="difficulty-meta">50% speed</span>
+        </label>
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="small-kids">
+          <span class="difficulty-name">Small kids</span>
+          <span class="difficulty-meta">25% speed</span>
+        </label>
+      </fieldset>
       <button id="start-button" class="primary-button" type="button">Start Game</button>
     </section>
 
