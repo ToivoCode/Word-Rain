@@ -160,7 +160,7 @@ h3 {
 
 .hud {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: 1.2fr 1.8fr 1fr 1fr;
   gap: 12px;
   padding: 18px 20px;
 }
@@ -406,6 +406,31 @@ h3 {
 
 .action-count {
   color: var(--muted);
+}
+
+.resource-footer {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 18px;
+  background: rgba(255, 252, 246, 0.78);
+}
+
+.resource-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(84, 88, 102, 0.08);
+}
+
+.resource-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
 }
 
 .shop-overlay {
