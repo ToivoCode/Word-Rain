@@ -15,6 +15,9 @@
   --overlay: rgba(31, 42, 54, 0.36);
   --word-bg: rgba(255, 255, 255, 0.92);
   --word-match: rgba(232, 247, 236, 0.98);
+  --word-text: #1f2a36;
+  --word-border: rgba(62, 76, 93, 0.12);
+  --word-match-text: #2f7a57;
   --arena-top: rgba(173, 210, 235, 0.45);
   --arena-bottom: rgba(247, 239, 224, 0.85);
   --text: #1f2a36;
@@ -42,8 +45,11 @@ body[data-theme="dark"] {
   --resource-panel: rgba(18, 24, 40, 0.76);
   --resource-pill: rgba(26, 34, 55, 0.9);
   --overlay: rgba(4, 7, 14, 0.62);
-  --word-bg: rgba(238, 244, 255, 0.96);
+  --word-bg: rgba(240, 246, 255, 0.96);
   --word-match: rgba(173, 245, 221, 0.94);
+  --word-text: #18233a;
+  --word-border: rgba(125, 155, 212, 0.26);
+  --word-match-text: #114b44;
   --arena-top: rgba(34, 79, 133, 0.42);
   --arena-bottom: rgba(16, 23, 41, 0.92);
   --text: #e7edf8;
@@ -381,8 +387,9 @@ h3 {
   padding: 8px 14px;
   border-radius: 999px;
   background: var(--word-bg);
-  border: 1px solid rgba(62, 76, 93, 0.12);
+  border: 1px solid var(--word-border);
   box-shadow: 0 10px 18px rgba(47, 58, 71, 0.12);
+  color: var(--word-text);
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -391,7 +398,7 @@ h3 {
 .word.matching {
   background: var(--word-match);
   border-color: rgba(47, 122, 87, 0.3);
-  color: var(--good);
+  color: var(--word-match-text);
 }
 
 .word.warning {
@@ -457,6 +464,7 @@ h3 {
 .action-button {
   border: 1px solid var(--card-border);
   background: var(--action-bg);
+  color: var(--text);
   padding: 14px;
   text-align: left;
   cursor: pointer;
