@@ -6,7 +6,7 @@
   <title>Ordregn</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-theme="light">
   <main class="app-shell">
     <section id="start-screen" class="panel screen active" aria-labelledby="game-title">
       <p class="eyebrow" data-i18n="start.eyebrow">Norsk skrivelek</p>
@@ -41,6 +41,19 @@
           <input type="radio" name="difficulty" value="small-kids">
           <span class="difficulty-name" data-i18n="difficulty.smallKids">Små barn</span>
           <span class="difficulty-meta" data-i18n="difficulty.smallKidsMeta">25% fart</span>
+        </label>
+      </fieldset>
+      <fieldset class="difficulty-picker">
+        <legend class="hud-label" data-i18n="start.themeLegend">Tema</legend>
+        <label class="difficulty-option">
+          <input type="radio" name="theme" value="light" checked>
+          <span class="difficulty-name" data-i18n="theme.light">Lys</span>
+          <span class="difficulty-meta" data-i18n="theme.lightMeta">Nåværende stil</span>
+        </label>
+        <label class="difficulty-option">
+          <input type="radio" name="theme" value="dark">
+          <span class="difficulty-name" data-i18n="theme.dark">Mørk</span>
+          <span class="difficulty-meta" data-i18n="theme.darkMeta">Moderne nattstil</span>
         </label>
       </fieldset>
       <button id="start-button" class="primary-button" type="button" data-i18n="start.button">Start spill</button>

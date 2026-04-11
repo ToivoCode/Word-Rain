@@ -5,6 +5,7 @@ const startButton = document.getElementById('start-button');
 const restartButton = document.getElementById('restart-button');
 const difficultyInputs = Array.from(document.querySelectorAll('input[name="difficulty"]'));
 const languageInputs = Array.from(document.querySelectorAll('input[name="language"]'));
+const themeInputs = Array.from(document.querySelectorAll('input[name="theme"]'));
 const scoreEl = document.getElementById('score');
 const heartsEl = document.getElementById('hearts');
 const wordStreakEl = document.getElementById('word-streak');
@@ -71,6 +72,11 @@ const TRANSLATIONS = {
     'difficulty.kidsMeta': '50% fart',
     'difficulty.smallKids': 'Små barn',
     'difficulty.smallKidsMeta': '25% fart',
+    'start.themeLegend': 'Tema',
+    'theme.light': 'Lys',
+    'theme.lightMeta': 'Nåværende stil',
+    'theme.dark': 'Mørk',
+    'theme.darkMeta': 'Moderne nattstil',
     'start.button': 'Start spill',
     'hud.score': 'Poeng',
     'hud.hearts': 'Hjerter',
@@ -137,6 +143,11 @@ const TRANSLATIONS = {
     'difficulty.kidsMeta': '50% speed',
     'difficulty.smallKids': 'Small kids',
     'difficulty.smallKidsMeta': '25% speed',
+    'start.themeLegend': 'Theme',
+    'theme.light': 'Light',
+    'theme.lightMeta': 'Current style',
+    'theme.dark': 'Dark',
+    'theme.darkMeta': 'Modern night style',
     'start.button': 'Start Game',
     'hud.score': 'Score',
     'hud.hearts': 'Hearts',
@@ -202,6 +213,7 @@ const state = {
   charPoints: 0,
   difficultyKey: 'adult',
   languageKey: 'no',
+  themeKey: 'light',
   statusMessage: '',
   statusKind: '',
   statusUntil: 0,
@@ -251,6 +263,11 @@ function getSelectedLanguageKey() {
   return selected ? selected.value : 'no';
 }
 
+function getSelectedThemeKey() {
+  const selected = themeInputs.find((input) => input.checked);
+  return selected ? selected.value : 'light';
+}
+
 function getDifficulty() {
   return DIFFICULTIES[state.difficultyKey] || DIFFICULTIES.adult;
 }
@@ -274,6 +291,10 @@ function applyLanguage() {
     element.textContent = t(element.dataset.i18n);
   });
   renderHud();
+}
+
+function applyTheme() {
+  document.body.dataset.theme = state.themeKey;
 }
 
 function formatSeconds(ms) {
@@ -415,7 +436,9 @@ function startGame() {
   if (state.screen === 'start') {
     state.difficultyKey = getSelectedDifficultyKey();
     state.languageKey = getSelectedLanguageKey();
+    state.themeKey = getSelectedThemeKey();
     applyLanguage();
+    applyTheme();
   }
 
   resetGame();
@@ -848,6 +871,14 @@ languageInputs.forEach((input) => {
     }
   });
 });
+themeInputs.forEach((input) => {
+  input.addEventListener('change', () => {
+    if (state.screen === 'start') {
+      state.themeKey = getSelectedThemeKey();
+      applyTheme();
+    }
+  });
+});
 window.addEventListener('keydown', handleKeydown);
 window.addEventListener('resize', () => {
   state.words.forEach((word) => updateWordPosition(word));
@@ -855,3 +886,4 @@ window.addEventListener('resize', () => {
 
 setScreen('start');
 applyLanguage();
+applyTheme();

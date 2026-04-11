@@ -3,6 +3,20 @@
   --bg-bottom: #d8e3f1;
   --panel: rgba(255, 252, 246, 0.92);
   --panel-border: rgba(84, 88, 102, 0.16);
+  --card: rgba(255, 255, 255, 0.62);
+  --card-border: rgba(84, 88, 102, 0.08);
+  --soft-surface: rgba(255, 255, 255, 0.68);
+  --soft-surface-strong: rgba(255, 255, 255, 0.86);
+  --secondary-bg: rgba(255, 255, 255, 0.95);
+  --action-bg: rgba(255, 255, 255, 0.86);
+  --action-bg-active: rgba(255, 245, 239, 0.96);
+  --resource-panel: rgba(255, 252, 246, 0.78);
+  --resource-pill: rgba(255, 255, 255, 0.72);
+  --overlay: rgba(31, 42, 54, 0.36);
+  --word-bg: rgba(255, 255, 255, 0.92);
+  --word-match: rgba(232, 247, 236, 0.98);
+  --arena-top: rgba(173, 210, 235, 0.45);
+  --arena-bottom: rgba(247, 239, 224, 0.85);
   --text: #1f2a36;
   --muted: #5f6a76;
   --accent: #cd5c36;
@@ -11,6 +25,35 @@
   --good: #2f7a57;
   --gold: #d8ab3f;
   --shadow: 0 20px 45px rgba(45, 58, 72, 0.15);
+}
+
+body[data-theme="dark"] {
+  --bg-top: #0d1220;
+  --bg-bottom: #1b2440;
+  --panel: rgba(18, 24, 40, 0.9);
+  --panel-border: rgba(92, 116, 171, 0.18);
+  --card: rgba(24, 31, 51, 0.88);
+  --card-border: rgba(92, 116, 171, 0.16);
+  --soft-surface: rgba(22, 29, 47, 0.9);
+  --soft-surface-strong: rgba(24, 31, 51, 0.94);
+  --secondary-bg: rgba(26, 34, 55, 0.96);
+  --action-bg: rgba(23, 31, 50, 0.94);
+  --action-bg-active: rgba(38, 48, 77, 0.98);
+  --resource-panel: rgba(18, 24, 40, 0.76);
+  --resource-pill: rgba(26, 34, 55, 0.9);
+  --overlay: rgba(4, 7, 14, 0.62);
+  --word-bg: rgba(238, 244, 255, 0.96);
+  --word-match: rgba(173, 245, 221, 0.94);
+  --arena-top: rgba(34, 79, 133, 0.42);
+  --arena-bottom: rgba(16, 23, 41, 0.92);
+  --text: #e7edf8;
+  --muted: #9fb0cf;
+  --accent: #16c6c9;
+  --accent-dark: #0fa0a3;
+  --danger: #ff7c8b;
+  --good: #63ddb5;
+  --gold: #f0c35d;
+  --shadow: 0 24px 50px rgba(2, 6, 14, 0.5);
 }
 
 * {
@@ -130,8 +173,8 @@ h3 {
   gap: 12px;
   padding: 12px 14px;
   border-radius: 16px;
-  border: 1px solid rgba(84, 88, 102, 0.1);
-  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid var(--card-border);
+  background: var(--soft-surface);
   cursor: pointer;
 }
 
@@ -183,7 +226,7 @@ h3 {
 }
 
 .secondary-button {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--secondary-bg);
   border: 1px solid rgba(84, 88, 102, 0.14);
   color: var(--text);
 }
@@ -208,8 +251,8 @@ h3 {
 }
 
 .hud-card {
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(84, 88, 102, 0.08);
+  background: var(--card);
+  border: 1px solid var(--card-border);
   border-radius: 16px;
   padding: 14px 16px;
   min-height: 86px;
@@ -323,7 +366,7 @@ h3 {
   overflow: hidden;
   min-height: 520px;
   background:
-    linear-gradient(180deg, rgba(173, 210, 235, 0.45), rgba(247, 239, 224, 0.85)),
+    linear-gradient(180deg, var(--arena-top), var(--arena-bottom)),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.18) 2px, transparent 2px, transparent 64px);
 }
 
@@ -337,7 +380,7 @@ h3 {
   transform: translateX(-50%);
   padding: 8px 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--word-bg);
   border: 1px solid rgba(62, 76, 93, 0.12);
   box-shadow: 0 10px 18px rgba(47, 58, 71, 0.12);
   font-weight: 700;
@@ -346,7 +389,7 @@ h3 {
 }
 
 .word.matching {
-  background: rgba(232, 247, 236, 0.98);
+  background: var(--word-match);
   border-color: rgba(47, 122, 87, 0.3);
   color: var(--good);
 }
@@ -382,8 +425,8 @@ h3 {
 }
 
 .status-chip {
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(84, 88, 102, 0.08);
+  background: var(--soft-surface-strong);
+  border: 1px solid var(--card-border);
 }
 
 .status-chip.good {
@@ -402,7 +445,7 @@ h3 {
   flex: 1;
   text-align: right;
   color: var(--muted);
-  background: rgba(255, 255, 255, 0.62);
+  background: var(--soft-surface);
 }
 
 .action-menu {
@@ -412,8 +455,8 @@ h3 {
 }
 
 .action-button {
-  border: 1px solid rgba(84, 88, 102, 0.1);
-  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid var(--card-border);
+  background: var(--action-bg);
   padding: 14px;
   text-align: left;
   cursor: pointer;
@@ -425,7 +468,7 @@ h3 {
 .action-button:focus-visible,
 .action-button.active {
   border-color: rgba(205, 92, 54, 0.36);
-  background: rgba(255, 245, 239, 0.96);
+  background: var(--action-bg-active);
   transform: translateY(-1px);
 }
 
@@ -455,7 +498,7 @@ h3 {
   justify-content: flex-end;
   gap: 12px;
   padding: 12px 18px;
-  background: rgba(255, 252, 246, 0.78);
+  background: var(--resource-panel);
 }
 
 .resource-pill {
@@ -464,8 +507,8 @@ h3 {
   gap: 8px;
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(84, 88, 102, 0.08);
+  background: var(--resource-pill);
+  border: 1px solid var(--card-border);
 }
 
 .resource-label {
@@ -491,7 +534,7 @@ h3 {
 .shop-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(31, 42, 54, 0.36);
+  background: var(--overlay);
 }
 
 .shop-dialog {
@@ -519,10 +562,10 @@ h3 {
 }
 
 .shop-item {
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--resource-pill);
   border-radius: 18px;
   padding: 18px;
-  border: 1px solid rgba(84, 88, 102, 0.08);
+  border: 1px solid var(--card-border);
 }
 
 .shop-item p {
