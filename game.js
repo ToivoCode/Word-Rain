@@ -17,6 +17,7 @@ const typedDisplayEl = document.getElementById('typed-display');
 const finalScoreEl = document.getElementById('final-score');
 const effectStatusEl = document.getElementById('effect-status');
 const commandPromptEl = document.getElementById('command-prompt');
+const soundToggleButton = document.getElementById('sound-toggle');
 const countTntEl = document.getElementById('count-tnt');
 const countSlowEl = document.getElementById('count-slow');
 const countPauseEl = document.getElementById('count-pause');
@@ -34,6 +35,7 @@ const MIN_SPAWN_MS = 850;
 const FALL_SPEED = 42;
 const SCORE_PER_WORD = 10;
 const ABILITY_DURATION_MS = 10000;
+const SOUND_STORAGE_KEY = 'ordregn-sound-enabled';
 
 const COMMANDS = {
   1: { labelKey: 'ability.tnt', inventoryKey: 'tnt' },
@@ -54,6 +56,14 @@ const DIFFICULTIES = {
   kids: { speedMultiplier: 0.5 },
   'small-kids': { speedMultiplier: 0.25 }
 };
+
+function loadStoredSoundEnabled() {
+  try {
+    return window.localStorage.getItem(SOUND_STORAGE_KEY) !== 'off';
+  } catch {
+    return true;
+  }
+}
 
 const TRANSLATIONS = {
   no: {
@@ -78,6 +88,8 @@ const TRANSLATIONS = {
     'theme.dark': 'Mørk',
     'theme.darkMeta': 'Moderne nattstil',
     'start.button': 'Start spill',
+    'sound.on': 'Lyd på',
+    'sound.off': 'Lyd av',
     'hud.score': 'Poeng',
     'hud.hearts': 'Hjerter',
     'hud.wordStreak': 'Ordrekke',
@@ -149,6 +161,8 @@ const TRANSLATIONS = {
     'theme.dark': 'Dark',
     'theme.darkMeta': 'Modern night style',
     'start.button': 'Start Game',
+    'sound.on': 'Sound On',
+    'sound.off': 'Sound Off',
     'hud.score': 'Score',
     'hud.hearts': 'Hearts',
     'hud.wordStreak': 'Word Streak',
@@ -214,6 +228,7 @@ const state = {
   difficultyKey: 'adult',
   languageKey: 'no',
   themeKey: 'light',
+  soundEnabled: loadStoredSoundEnabled(),
   statusMessage: '',
   statusKind: '',
   statusUntil: 0,
@@ -233,6 +248,11 @@ const state = {
     slow: 1,
     pause: 1
   }
+};
+
+const audioState = {
+  context: null,
+  noiseBuffer: null
 };
 
 function setScreen(name) {
@@ -295,6 +315,185 @@ function applyLanguage() {
 
 function applyTheme() {
   document.body.dataset.theme = state.themeKey;
+}
+
+function persistSoundPreference() {
+  try {
+    window.localStorage.setItem(SOUND_STORAGE_KEY, state.soundEnabled ? 'on' : 'off');
+  } catch {
+    // Ignore storage issues and keep the in-memory preference.
+  }
+}
+
+function renderSoundToggle() {
+  if (!soundToggleButton) {
+    return;
+  }
+
+  const icon = state.soundEnabled ? '\uD83D\uDD0A' : '\uD83D\uDD07';
+  const label = t(state.soundEnabled ? 'sound.on' : 'sound.off');
+  soundToggleButton.textContent = `${icon} ${label}`;
+}
+
+function createNoiseBuffer(context) {
+  const buffer = context.createBuffer(1, context.sampleRate * 0.35, context.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i += 1) {
+    data[i] = (Math.random() * 2) - 1;
+  }
+  return buffer;
+}
+
+async function ensureAudioReady() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) {
+    return null;
+  }
+
+  if (!audioState.context) {
+    audioState.context = new AudioContextClass();
+    audioState.noiseBuffer = createNoiseBuffer(audioState.context);
+  }
+
+  if (audioState.context.state === 'suspended') {
+    try {
+      await audioState.context.resume();
+    } catch {
+      return null;
+    }
+  }
+
+  return audioState.context;
+}
+
+function scheduleEnvelope(gainNode, now, peakGain, attack, release) {
+  gainNode.gain.cancelScheduledValues(now);
+  gainNode.gain.setValueAtTime(0.0001, now);
+  gainNode.gain.linearRampToValueAtTime(peakGain, now + attack);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + attack + release);
+}
+
+function playTone(options = {}) {
+  if (!state.soundEnabled || !audioState.context) {
+    return;
+  }
+
+  const context = audioState.context;
+  const now = context.currentTime + (options.delay || 0);
+  const oscillator = context.createOscillator();
+  const gainNode = context.createGain();
+
+  oscillator.type = options.type || 'sine';
+  oscillator.frequency.setValueAtTime(options.frequency || 440, now);
+
+  if (options.endFrequency) {
+    oscillator.frequency.exponentialRampToValueAtTime(options.endFrequency, now + (options.attack || 0.01) + (options.release || 0.12));
+  }
+
+  scheduleEnvelope(
+    gainNode,
+    now,
+    options.gain || 0.05,
+    options.attack || 0.01,
+    options.release || 0.12
+  );
+
+  oscillator.connect(gainNode);
+  gainNode.connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + (options.attack || 0.01) + (options.release || 0.12) + 0.04);
+}
+
+function playNoiseBurst(options = {}) {
+  if (!state.soundEnabled || !audioState.context || !audioState.noiseBuffer) {
+    return;
+  }
+
+  const context = audioState.context;
+  const now = context.currentTime + (options.delay || 0);
+  const source = context.createBufferSource();
+  const filter = context.createBiquadFilter();
+  const gainNode = context.createGain();
+
+  source.buffer = audioState.noiseBuffer;
+  filter.type = options.filterType || 'lowpass';
+  filter.frequency.setValueAtTime(options.frequency || 900, now);
+  filter.Q.value = options.q || 1.2;
+
+  scheduleEnvelope(
+    gainNode,
+    now,
+    options.gain || 0.08,
+    options.attack || 0.005,
+    options.release || 0.18
+  );
+
+  source.connect(filter);
+  filter.connect(gainNode);
+  gainNode.connect(context.destination);
+  source.start(now);
+  source.stop(now + (options.attack || 0.005) + (options.release || 0.18) + 0.05);
+}
+
+function playSoundEffect(effectName) {
+  if (!state.soundEnabled || !audioState.context) {
+    return;
+  }
+
+  switch (effectName) {
+    case 'wordComplete':
+      playTone({ type: 'triangle', frequency: 520, endFrequency: 780, gain: 0.045, release: 0.1 });
+      playTone({ type: 'triangle', frequency: 700, gain: 0.03, delay: 0.05, release: 0.08 });
+      break;
+    case 'wrongCharacter':
+      playTone({ type: 'square', frequency: 240, endFrequency: 170, gain: 0.03, attack: 0.005, release: 0.09 });
+      break;
+    case 'heartLost':
+      playTone({ type: 'sawtooth', frequency: 280, endFrequency: 120, gain: 0.05, attack: 0.005, release: 0.28 });
+      break;
+    case 'tnt':
+      playNoiseBurst({ frequency: 700, gain: 0.12, release: 0.28 });
+      playTone({ type: 'sawtooth', frequency: 140, endFrequency: 48, gain: 0.09, attack: 0.005, release: 0.32 });
+      playNoiseBurst({ frequency: 380, gain: 0.06, delay: 0.04, release: 0.2 });
+      break;
+    case 'slow':
+      playTone({ type: 'sine', frequency: 460, endFrequency: 290, gain: 0.035, attack: 0.01, release: 0.22 });
+      break;
+    case 'pause':
+      playTone({ type: 'triangle', frequency: 430, gain: 0.035, attack: 0.01, release: 0.1 });
+      playTone({ type: 'triangle', frequency: 350, gain: 0.03, delay: 0.08, attack: 0.01, release: 0.14 });
+      break;
+    case 'shopOpen':
+      playTone({ type: 'triangle', frequency: 360, gain: 0.025, attack: 0.01, release: 0.08 });
+      playTone({ type: 'triangle', frequency: 480, gain: 0.025, delay: 0.06, attack: 0.01, release: 0.08 });
+      break;
+    case 'buy':
+      playTone({ type: 'square', frequency: 620, gain: 0.02, attack: 0.004, release: 0.06 });
+      playTone({ type: 'square', frequency: 840, gain: 0.025, delay: 0.04, attack: 0.004, release: 0.08 });
+      break;
+    case 'silverConvert':
+      playTone({ type: 'triangle', frequency: 520, gain: 0.02, attack: 0.01, release: 0.08 });
+      playTone({ type: 'triangle', frequency: 780, gain: 0.03, delay: 0.05, attack: 0.01, release: 0.1 });
+      break;
+    case 'gameOver':
+      playTone({ type: 'sine', frequency: 320, endFrequency: 240, gain: 0.03, release: 0.18 });
+      playTone({ type: 'sine', frequency: 220, endFrequency: 150, gain: 0.03, delay: 0.12, release: 0.24 });
+      break;
+    default:
+      break;
+  }
+}
+
+function toggleSound() {
+  state.soundEnabled = !state.soundEnabled;
+  persistSoundPreference();
+  renderSoundToggle();
+
+  if (state.soundEnabled) {
+    ensureAudioReady().then(() => {
+      playTone({ type: 'triangle', frequency: 520, gain: 0.025, release: 0.08 });
+    });
+  }
 }
 
 function formatSeconds(ms) {
@@ -397,6 +596,7 @@ function renderHud() {
   renderCommandPrompt();
   renderActionButtons();
   renderShop();
+  renderSoundToggle();
 }
 
 function resetGame() {
@@ -428,6 +628,8 @@ function resetGame() {
 }
 
 function startGame() {
+  ensureAudioReady();
+
   if (state.loopId) {
     window.cancelAnimationFrame(state.loopId);
     state.loopId = null;
@@ -455,6 +657,7 @@ function endGame() {
   }
 
   state.shopOpen = false;
+  playSoundEffect('gameOver');
   finalScoreEl.textContent = String(state.score);
   renderHud();
   setScreen('game-over');
@@ -572,6 +775,7 @@ function convertSilverIfNeeded() {
 
   state.charPoints = 0;
   state.wordPoints += 1;
+  playSoundEffect('silverConvert');
   showStatus(t('status.silverConvert'), 'good', 1400);
 }
 
@@ -595,12 +799,14 @@ function applyAbility(slot) {
 
   if (slot === 4) {
     openShop();
+    playSoundEffect('shopOpen');
     showStatus(t('status.shopOpened'), 'good', 1400);
     return;
   }
 
   const key = command.inventoryKey;
   if (state.inventory[key] <= 0) {
+    playSoundEffect('wrongCharacter');
     showStatus(t('status.noCharges', { item: getItemLabel(key) }), 'bad');
     return;
   }
@@ -610,12 +816,15 @@ function applyAbility(slot) {
   if (slot === 1) {
     state.typedText = '';
     clearAllWords();
+    playSoundEffect('tnt');
     showStatus(t('status.tntCleared'), 'good');
   } else if (slot === 2) {
     state.slowTimer = ABILITY_DURATION_MS;
+    playSoundEffect('slow');
     showStatus(t('status.slowActive'), 'good');
   } else if (slot === 3) {
     state.pauseTimer = ABILITY_DURATION_MS;
+    playSoundEffect('pause');
     showStatus(t('status.pauseActive'), 'warn');
   }
 
@@ -630,12 +839,14 @@ function buyShopItem(itemKey) {
   }
 
   if (state.wordPoints < item.goldCost) {
+    playSoundEffect('wrongCharacter');
     showStatus(t('status.notEnoughGold'), 'bad');
     renderHud();
     return;
   }
 
   if (itemKey === 'heart' && state.lives >= START_LIVES) {
+    playSoundEffect('wrongCharacter');
     showStatus(t('status.heartsFull'), 'bad');
     renderHud();
     return;
@@ -649,6 +860,7 @@ function buyShopItem(itemKey) {
     state.inventory[itemKey] += 1;
   }
 
+  playSoundEffect('buy');
   showStatus(t('status.bought', { item: getItemLabel(itemKey) }), 'good');
   renderHud();
 }
@@ -666,6 +878,7 @@ function trySubmitTypedWord() {
   const scoreGain = SCORE_PER_WORD + (state.wordStreak * 3) + Math.floor(state.charStreak / 5);
   state.score += scoreGain;
   state.typedText = '';
+  playSoundEffect('wordComplete');
   showStatus(t('status.scoreGain', { score: scoreGain }), 'good', 1200);
   renderHud();
   updateWordHighlights();
@@ -675,6 +888,7 @@ function handleWrongCharacter() {
   state.attemptedChars += 1;
   state.typedText = '';
   resetStreaks();
+  playSoundEffect('wrongCharacter');
   showStatus(t('status.wrongCharacter'), 'bad');
   renderHud();
   updateWordHighlights();
@@ -684,6 +898,7 @@ function damagePlayer() {
   state.lives -= 1;
   state.typedText = '';
   resetStreaks();
+  playSoundEffect('heartLost');
   showStatus(t('status.wordBottom'), 'bad');
   renderHud();
   updateWordHighlights();
@@ -832,6 +1047,8 @@ function handleKeydown(event) {
     return;
   }
 
+  ensureAudioReady();
+
   if (state.shopOpen) {
     if (event.key === 'Escape') {
       closeShop();
@@ -849,17 +1066,22 @@ function handleKeydown(event) {
 
 startButton.addEventListener('click', startGame);
 restartButton.addEventListener('click', startGame);
+soundToggleButton.addEventListener('click', () => {
+  ensureAudioReady().finally(toggleSound);
+});
 shopCloseButton.addEventListener('click', closeShop);
 shopBackdrop.addEventListener('click', closeShop);
 actionButtons.forEach((button) => {
   button.addEventListener('click', () => {
     if (state.screen === 'playing' && !state.shopOpen) {
+      ensureAudioReady();
       applyAbility(Number(button.dataset.slot));
     }
   });
 });
 shopButtons.forEach((button) => {
   button.addEventListener('click', () => {
+    ensureAudioReady();
     buyShopItem(button.dataset.shopItem);
   });
 });
