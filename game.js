@@ -617,12 +617,6 @@ function handleCommandKeydown(event) {
 }
 
 function handleNormalTyping(event) {
-  if (state.pauseTimer > 0) {
-    showStatus('Pause is active. Use a command or wait it out.', 'warn');
-    renderHud();
-    return;
-  }
-
   if (event.key === 'Backspace') {
     event.preventDefault();
     if (state.typedText.length > 0) {
