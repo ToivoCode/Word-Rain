@@ -6,6 +6,7 @@ const restartButton = document.getElementById('restart-button');
 const difficultyInputs = Array.from(document.querySelectorAll('input[name="difficulty"]'));
 const languageInputs = Array.from(document.querySelectorAll('input[name="language"]'));
 const themeInputs = Array.from(document.querySelectorAll('input[name="theme"]'));
+const soundInputs = Array.from(document.querySelectorAll('input[name="sound"]'));
 const playerNameInput = document.getElementById('player-name');
 const scoreEl = document.getElementById('score');
 const heartsEl = document.getElementById('hearts');
@@ -19,7 +20,6 @@ const finalScoreEl = document.getElementById('final-score');
 const leaderboardResultEl = document.getElementById('leaderboard-result');
 const effectStatusEl = document.getElementById('effect-status');
 const commandPromptEl = document.getElementById('command-prompt');
-const soundToggleButton = document.getElementById('sound-toggle');
 const countTntEl = document.getElementById('count-tnt');
 const countSlowEl = document.getElementById('count-slow');
 const countPauseEl = document.getElementById('count-pause');
@@ -119,6 +119,7 @@ const TRANSLATIONS = {
     'theme.lightMeta': 'Nåværende stil',
     'theme.dark': 'Mørk',
     'theme.darkMeta': 'Moderne nattstil',
+    'start.soundLegend': 'Lyd',
     'start.playerNameLabel': 'Spillernavn',
     'start.playerNamePlaceholder': 'Spiller',
     'start.button': 'Start spill',
@@ -212,6 +213,7 @@ const TRANSLATIONS = {
     'theme.lightMeta': 'Current style',
     'theme.dark': 'Dark',
     'theme.darkMeta': 'Modern night style',
+    'start.soundLegend': 'Sound',
     'start.playerNameLabel': 'Player name',
     'start.playerNamePlaceholder': 'Player',
     'start.button': 'Start Game',
@@ -377,6 +379,9 @@ function syncStartInputs() {
   themeInputs.forEach((input) => {
     input.checked = input.value === state.themeKey;
   });
+  soundInputs.forEach((input) => {
+    input.checked = input.value === (state.soundEnabled ? 'on' : 'off');
+  });
 
   if (playerNameInput) {
     playerNameInput.value = state.playerName;
@@ -541,6 +546,11 @@ function getSelectedThemeKey() {
   return selected ? selected.value : 'light';
 }
 
+function getSelectedSoundEnabled() {
+  const selected = soundInputs.find((input) => input.checked);
+  return selected ? selected.value !== 'off' : true;
+}
+
 function getDifficulty() {
   return DIFFICULTIES[state.difficultyKey] || DIFFICULTIES.adult;
 }
@@ -604,16 +614,6 @@ function persistSoundPreference() {
   } catch {
     // Ignore storage issues and keep the in-memory preference.
   }
-}
-
-function renderSoundToggle() {
-  if (!soundToggleButton) {
-    return;
-  }
-
-  const icon = state.soundEnabled ? '\uD83D\uDD0A' : '\uD83D\uDD07';
-  const label = t(state.soundEnabled ? 'sound.on' : 'sound.off');
-  soundToggleButton.textContent = `${icon} ${label}`;
 }
 
 function createNoiseBuffer(context) {
@@ -765,18 +765,6 @@ function playSoundEffect(effectName) {
   }
 }
 
-function toggleSound() {
-  state.soundEnabled = !state.soundEnabled;
-  persistSoundPreference();
-  renderSoundToggle();
-
-  if (state.soundEnabled) {
-    ensureAudioReady().then(() => {
-      playTone({ type: 'triangle', frequency: 520, gain: 0.025, release: 0.08 });
-    });
-  }
-}
-
 function formatSeconds(ms) {
   return `${(ms / 1000).toFixed(1)}s`;
 }
@@ -877,7 +865,6 @@ function renderHud() {
   renderCommandPrompt();
   renderActionButtons();
   renderShop();
-  renderSoundToggle();
 }
 
 function resetGame() {
@@ -931,6 +918,8 @@ function startGame() {
     state.difficultyKey = getSelectedDifficultyKey();
     state.languageKey = getSelectedLanguageKey();
     state.themeKey = getSelectedThemeKey();
+    state.soundEnabled = getSelectedSoundEnabled();
+    persistSoundPreference();
     state.playerName = sanitizePlayerName(playerNameInput ? playerNameInput.value : state.playerName);
     persistSettings();
     persistPlayerName();
@@ -1389,9 +1378,6 @@ function handleKeydown(event) {
 
 startButton.addEventListener('click', startGame);
 restartButton.addEventListener('click', returnToMainMenu);
-soundToggleButton.addEventListener('click', () => {
-  ensureAudioReady().finally(toggleSound);
-});
 shopCloseButton.addEventListener('click', closeShop);
 shopBackdrop.addEventListener('click', closeShop);
 actionButtons.forEach((button) => {
@@ -1432,6 +1418,14 @@ themeInputs.forEach((input) => {
       state.themeKey = getSelectedThemeKey();
       persistSettings();
       applyTheme();
+    }
+  });
+});
+soundInputs.forEach((input) => {
+  input.addEventListener('change', () => {
+    if (state.screen === 'start') {
+      state.soundEnabled = getSelectedSoundEnabled();
+      persistSoundPreference();
     }
   });
 });

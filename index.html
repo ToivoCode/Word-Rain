@@ -56,6 +56,17 @@
           <span class="difficulty-meta" data-i18n="theme.darkMeta">Moderne nattstil</span>
         </label>
       </fieldset>
+      <fieldset class="difficulty-picker">
+        <legend class="hud-label" data-i18n="start.soundLegend">Lyd</legend>
+        <label class="difficulty-option">
+          <input type="radio" name="sound" value="on" checked>
+          <span class="difficulty-name" data-i18n="sound.on">Lyd på</span>
+        </label>
+        <label class="difficulty-option">
+          <input type="radio" name="sound" value="off">
+          <span class="difficulty-name" data-i18n="sound.off">Lyd av</span>
+        </label>
+      </fieldset>
       <div class="player-name-group">
         <label for="player-name" class="hud-label" data-i18n="start.playerNameLabel">Spillernavn</label>
         <input id="player-name" class="text-input" type="text" maxlength="24" autocomplete="nickname" placeholder="Spiller">
@@ -123,7 +134,6 @@
         <div class="action-panel-top">
           <div id="effect-status" class="status-chip">No active effect</div>
           <div id="command-prompt" class="command-prompt">Press 1, 2, 3, or 4 to trigger TNT, Slow, Pause, or Shop.</div>
-          <button id="sound-toggle" class="secondary-button sound-toggle" type="button">🔊 Sound On</button>
         </div>
         <div class="action-menu">
           <button class="action-button" type="button" data-slot="1">

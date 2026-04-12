@@ -174,7 +174,7 @@ If your hearts are already full, you cannot buy another heart.
 
 The game includes simple built-in sound effects for successful words, mistakes, heart loss, TNT, shop actions, and other important events.
 
-Sound can be turned on or off from the action area.
+Sound can be turned on or off from the start menu.
 
 ## Leaderboard
 

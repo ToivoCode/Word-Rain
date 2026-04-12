@@ -575,13 +575,6 @@ h3 {
   background: var(--soft-surface);
 }
 
-.sound-toggle {
-  flex: 0 0 auto;
-  padding: 10px 16px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
 .action-menu {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -748,10 +741,6 @@ h3 {
 
   .command-prompt {
     text-align: left;
-  }
-
-  .sound-toggle {
-    width: 100%;
   }
 
   .action-menu {
