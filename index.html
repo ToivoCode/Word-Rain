@@ -56,7 +56,22 @@
           <span class="difficulty-meta" data-i18n="theme.darkMeta">Moderne nattstil</span>
         </label>
       </fieldset>
+      <div class="player-name-group">
+        <label for="player-name" class="hud-label" data-i18n="start.playerNameLabel">Spillernavn</label>
+        <input id="player-name" class="text-input" type="text" maxlength="24" autocomplete="nickname" placeholder="Spiller">
+      </div>
       <button id="start-button" class="primary-button" type="button" data-i18n="start.button">Start spill</button>
+      <section class="leaderboard-panel">
+        <div class="leaderboard-header">
+          <div>
+            <p class="eyebrow" data-i18n="leaderboard.eyebrow">Lokal toppliste</p>
+            <h3 data-i18n="leaderboard.title">Beste runder</h3>
+          </div>
+          <div id="leaderboard-difficulty" class="leaderboard-difficulty">Voksne</div>
+        </div>
+        <p id="leaderboard-empty" class="leaderboard-empty">Ingen resultater ennå.</p>
+        <ol id="leaderboard-list" class="leaderboard-list"></ol>
+      </section>
     </section>
 
     <section id="game-screen" class="screen" aria-label="Game screen">
@@ -200,6 +215,7 @@
       <p class="eyebrow" data-i18n="gameOver.eyebrow">Runden er over</p>
       <h2 id="game-over-title" data-i18n="gameOver.title">Spillet er slutt</h2>
       <p class="lead"><span data-i18n="gameOver.finalScore">Sluttpoeng:</span> <strong id="final-score">0</strong></p>
+      <p id="leaderboard-result" class="game-over-note"></p>
       <button id="restart-button" class="primary-button" type="button" data-i18n="gameOver.restart">Start på nytt</button>
     </section>
   </main>

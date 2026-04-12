@@ -6,6 +6,7 @@ const restartButton = document.getElementById('restart-button');
 const difficultyInputs = Array.from(document.querySelectorAll('input[name="difficulty"]'));
 const languageInputs = Array.from(document.querySelectorAll('input[name="language"]'));
 const themeInputs = Array.from(document.querySelectorAll('input[name="theme"]'));
+const playerNameInput = document.getElementById('player-name');
 const scoreEl = document.getElementById('score');
 const heartsEl = document.getElementById('hearts');
 const wordStreakEl = document.getElementById('word-streak');
@@ -15,6 +16,7 @@ const wordPointsEl = document.getElementById('word-points');
 const charPointsEl = document.getElementById('char-points');
 const typedDisplayEl = document.getElementById('typed-display');
 const finalScoreEl = document.getElementById('final-score');
+const leaderboardResultEl = document.getElementById('leaderboard-result');
 const effectStatusEl = document.getElementById('effect-status');
 const commandPromptEl = document.getElementById('command-prompt');
 const soundToggleButton = document.getElementById('sound-toggle');
@@ -27,6 +29,9 @@ const shopCloseButton = document.getElementById('shop-close');
 const shopBackdrop = document.querySelector('.shop-backdrop');
 const shopButtons = Array.from(document.querySelectorAll('[data-shop-item]'));
 const wordLayer = document.getElementById('word-layer');
+const leaderboardDifficultyEl = document.getElementById('leaderboard-difficulty');
+const leaderboardEmptyEl = document.getElementById('leaderboard-empty');
+const leaderboardListEl = document.getElementById('leaderboard-list');
 const translatableEls = Array.from(document.querySelectorAll('[data-i18n]'));
 
 const START_LIVES = 10;
@@ -36,6 +41,9 @@ const FALL_SPEED = 42;
 const SCORE_PER_WORD = 10;
 const ABILITY_DURATION_MS = 10000;
 const SOUND_STORAGE_KEY = 'ordregn-sound-enabled';
+const PLAYER_NAME_STORAGE_KEY = 'ordregn-player-name';
+const LEADERBOARD_STORAGE_KEY = 'ordregn-leaderboard-v1';
+const MAX_LEADERBOARD_ENTRIES = 10;
 
 const COMMANDS = {
   1: { labelKey: 'ability.tnt', inventoryKey: 'tnt' },
@@ -65,6 +73,14 @@ function loadStoredSoundEnabled() {
   }
 }
 
+function loadStoredPlayerName() {
+  try {
+    return window.localStorage.getItem(PLAYER_NAME_STORAGE_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
 const TRANSLATIONS = {
   no: {
     'start.eyebrow': 'Norsk skrivelek',
@@ -87,9 +103,27 @@ const TRANSLATIONS = {
     'theme.lightMeta': 'Nåværende stil',
     'theme.dark': 'Mørk',
     'theme.darkMeta': 'Moderne nattstil',
+    'start.playerNameLabel': 'Spillernavn',
+    'start.playerNamePlaceholder': 'Spiller',
     'start.button': 'Start spill',
     'sound.on': 'Lyd på',
     'sound.off': 'Lyd av',
+    'leaderboard.eyebrow': 'Lokal toppliste',
+    'leaderboard.title': 'Beste runder',
+    'leaderboard.empty': 'Ingen resultater ennå for denne vanskelighetsgraden.',
+    'leaderboard.rank': 'Plass',
+    'leaderboard.score': 'Poeng',
+    'leaderboard.accuracy': 'Nøyaktighet',
+    'leaderboard.bestWord': 'Beste ordrekke',
+    'leaderboard.bestChar': 'Beste tegnrekke',
+    'leaderboard.heartsLost': 'Mistede hjerter',
+    'leaderboard.tntUsed': 'TNT brukt',
+    'leaderboard.slowUsed': 'Sakte brukt',
+    'leaderboard.pauseUsed': 'Pause brukt',
+    'leaderboard.goldEarned': 'Gull tjent',
+    'leaderboard.silverEarned': 'Sølv tjent',
+    'leaderboard.goldSpent': 'Gull brukt',
+    'leaderboard.timeSpent': 'Tid',
     'hud.score': 'Poeng',
     'hud.hearts': 'Hjerter',
     'hud.wordStreak': 'Ordrekke',
@@ -119,6 +153,8 @@ const TRANSLATIONS = {
     'gameOver.eyebrow': 'Runden er over',
     'gameOver.title': 'Spillet er slutt',
     'gameOver.finalScore': 'Sluttpoeng:',
+    'gameOver.savedRank': '{name} er nå nummer {rank} på topplisten for {difficulty}.',
+    'gameOver.savedUnranked': 'Resultatet til {name} ble lagret for {difficulty}.',
     'gameOver.restart': 'Start på nytt',
     'title.document': 'Ordregn',
     'status.noActive': 'Ingen aktiv effekt',
@@ -160,9 +196,27 @@ const TRANSLATIONS = {
     'theme.lightMeta': 'Current style',
     'theme.dark': 'Dark',
     'theme.darkMeta': 'Modern night style',
+    'start.playerNameLabel': 'Player name',
+    'start.playerNamePlaceholder': 'Player',
     'start.button': 'Start Game',
     'sound.on': 'Sound On',
     'sound.off': 'Sound Off',
+    'leaderboard.eyebrow': 'Local leaderboard',
+    'leaderboard.title': 'Best runs',
+    'leaderboard.empty': 'No scores yet for this difficulty.',
+    'leaderboard.rank': 'Rank',
+    'leaderboard.score': 'Score',
+    'leaderboard.accuracy': 'Accuracy',
+    'leaderboard.bestWord': 'Best word streak',
+    'leaderboard.bestChar': 'Best char streak',
+    'leaderboard.heartsLost': 'Hearts lost',
+    'leaderboard.tntUsed': 'TNT used',
+    'leaderboard.slowUsed': 'Slow used',
+    'leaderboard.pauseUsed': 'Pause used',
+    'leaderboard.goldEarned': 'Gold earned',
+    'leaderboard.silverEarned': 'Silver earned',
+    'leaderboard.goldSpent': 'Gold spent',
+    'leaderboard.timeSpent': 'Time',
     'hud.score': 'Score',
     'hud.hearts': 'Hearts',
     'hud.wordStreak': 'Word Streak',
@@ -192,6 +246,8 @@ const TRANSLATIONS = {
     'gameOver.eyebrow': 'Round complete',
     'gameOver.title': 'Game Over',
     'gameOver.finalScore': 'Final score:',
+    'gameOver.savedRank': '{name} is now number {rank} on the {difficulty} leaderboard.',
+    'gameOver.savedUnranked': '{name} was saved on the {difficulty} leaderboard.',
     'gameOver.restart': 'Restart',
     'title.document': 'Word Rain',
     'status.noActive': 'No active effect',
@@ -225,10 +281,12 @@ const state = {
   attemptedChars: 0,
   wordPoints: 0,
   charPoints: 0,
+  playerName: loadStoredPlayerName(),
   difficultyKey: 'adult',
   languageKey: 'no',
   themeKey: 'light',
   soundEnabled: loadStoredSoundEnabled(),
+  leaderboardRank: null,
   statusMessage: '',
   statusKind: '',
   statusUntil: 0,
@@ -241,6 +299,16 @@ const state = {
   spawnTimer: 0,
   spawnInterval: BASE_SPAWN_MS,
   difficultyTimer: 0,
+  elapsedMs: 0,
+  bestWordStreak: 0,
+  bestCharStreak: 0,
+  heartsLost: 0,
+  tntUsed: 0,
+  slowUsed: 0,
+  pauseUsed: 0,
+  goldEarned: 0,
+  silverEarned: 0,
+  goldSpent: 0,
   loopId: null,
   usedWords: [],
   inventory: {
@@ -255,11 +323,152 @@ const audioState = {
   noiseBuffer: null
 };
 
+function sanitizePlayerName(name) {
+  return (name || '').trim().slice(0, 24);
+}
+
+function getPlayerName() {
+  return sanitizePlayerName(state.playerName) || t('start.playerNamePlaceholder');
+}
+
+function persistPlayerName() {
+  try {
+    window.localStorage.setItem(PLAYER_NAME_STORAGE_KEY, getPlayerName());
+  } catch {
+    // Ignore storage issues and keep the in-memory name.
+  }
+}
+
+function loadLeaderboardStore() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(LEADERBOARD_STORAGE_KEY) || '{}');
+    return {
+      adult: Array.isArray(parsed.adult) ? parsed.adult : [],
+      kids: Array.isArray(parsed.kids) ? parsed.kids : [],
+      'small-kids': Array.isArray(parsed['small-kids']) ? parsed['small-kids'] : []
+    };
+  } catch {
+    return {
+      adult: [],
+      kids: [],
+      'small-kids': []
+    };
+  }
+}
+
+function saveLeaderboardStore(store) {
+  try {
+    window.localStorage.setItem(LEADERBOARD_STORAGE_KEY, JSON.stringify(store));
+  } catch {
+    // Ignore storage failures and keep the current session playable.
+  }
+}
+
+function formatDuration(ms) {
+  const totalSeconds = Math.max(0, Math.round(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, '0')}`;
+}
+
+function getDifficultyLabel(difficultyKey = state.difficultyKey) {
+  if (difficultyKey === 'kids') {
+    return t('difficulty.kids');
+  }
+
+  if (difficultyKey === 'small-kids') {
+    return t('difficulty.smallKids');
+  }
+
+  return t('difficulty.adult');
+}
+
+function saveLeaderboardEntry() {
+  const store = loadLeaderboardStore();
+  const difficultyKey = state.difficultyKey;
+  const entry = {
+    name: getPlayerName(),
+    score: state.score,
+    bestWordStreak: state.bestWordStreak,
+    bestCharStreak: state.bestCharStreak,
+    accuracy: getAccuracyPercent(),
+    heartsLost: state.heartsLost,
+    tntUsed: state.tntUsed,
+    slowUsed: state.slowUsed,
+    pauseUsed: state.pauseUsed,
+    goldEarned: state.goldEarned,
+    silverEarned: state.silverEarned,
+    goldSpent: state.goldSpent,
+    timeSpentMs: state.elapsedMs,
+    createdAt: Date.now()
+  };
+
+  const nextEntries = [...store[difficultyKey], entry]
+    .sort((left, right) => {
+      if (right.score !== left.score) {
+        return right.score - left.score;
+      }
+      if (right.accuracy !== left.accuracy) {
+        return right.accuracy - left.accuracy;
+      }
+      return left.timeSpentMs - right.timeSpentMs;
+    })
+    .slice(0, MAX_LEADERBOARD_ENTRIES);
+
+  store[difficultyKey] = nextEntries;
+  saveLeaderboardStore(store);
+
+  const rank = nextEntries.findIndex((item) => item.createdAt === entry.createdAt) + 1;
+  return rank > 0 ? rank : null;
+}
+
+function renderLeaderboard() {
+  if (!leaderboardListEl || !leaderboardEmptyEl || !leaderboardDifficultyEl) {
+    return;
+  }
+
+  const difficultyKey = state.screen === 'start' ? getSelectedDifficultyKey() : state.difficultyKey;
+  const entries = loadLeaderboardStore()[difficultyKey] || [];
+
+  leaderboardDifficultyEl.textContent = getDifficultyLabel(difficultyKey);
+  leaderboardListEl.innerHTML = '';
+  leaderboardEmptyEl.textContent = t('leaderboard.empty');
+  leaderboardEmptyEl.hidden = entries.length > 0;
+
+  entries.forEach((entry, index) => {
+    const item = document.createElement('li');
+    item.className = 'leaderboard-item';
+
+    const main = document.createElement('div');
+    main.className = 'leaderboard-main';
+    main.innerHTML = `
+      <div>
+        <div class="leaderboard-rank">${t('leaderboard.rank')} ${index + 1}</div>
+        <div class="leaderboard-name"></div>
+      </div>
+      <div class="leaderboard-score">${t('leaderboard.score')}: ${entry.score}</div>
+    `;
+    main.querySelector('.leaderboard-name').textContent = entry.name;
+
+    const stats = document.createElement('div');
+    stats.className = 'leaderboard-stats';
+    stats.innerHTML = `
+      <div>${t('leaderboard.accuracy')}: ${entry.accuracy}% · ${t('leaderboard.bestWord')}: ${entry.bestWordStreak} · ${t('leaderboard.bestChar')}: ${entry.bestCharStreak}</div>
+      <div>${t('leaderboard.heartsLost')}: ${entry.heartsLost} · ${t('leaderboard.tntUsed')}: ${entry.tntUsed} · ${t('leaderboard.slowUsed')}: ${entry.slowUsed} · ${t('leaderboard.pauseUsed')}: ${entry.pauseUsed}</div>
+      <div>${t('leaderboard.goldEarned')}: ${entry.goldEarned} · ${t('leaderboard.silverEarned')}: ${entry.silverEarned} · ${t('leaderboard.goldSpent')}: ${entry.goldSpent} · ${t('leaderboard.timeSpent')}: ${formatDuration(entry.timeSpentMs)}</div>
+    `;
+
+    item.append(main, stats);
+    leaderboardListEl.appendChild(item);
+  });
+}
+
 function setScreen(name) {
   state.screen = name;
   startScreen.classList.toggle('active', name === 'start');
   gameScreen.classList.toggle('active', name === 'playing');
   gameOverScreen.classList.toggle('active', name === 'game-over');
+  renderLeaderboardResult();
 }
 
 function t(key, replacements = {}) {
@@ -310,11 +519,39 @@ function applyLanguage() {
   translatableEls.forEach((element) => {
     element.textContent = t(element.dataset.i18n);
   });
+  if (playerNameInput) {
+    playerNameInput.placeholder = t('start.playerNamePlaceholder');
+    playerNameInput.value = state.playerName;
+  }
+  renderLeaderboard();
+  renderLeaderboardResult();
   renderHud();
 }
 
 function applyTheme() {
   document.body.dataset.theme = state.themeKey;
+}
+
+function renderLeaderboardResult() {
+  if (!leaderboardResultEl) {
+    return;
+  }
+
+  if (state.screen !== 'game-over') {
+    leaderboardResultEl.textContent = '';
+    leaderboardResultEl.hidden = true;
+    return;
+  }
+
+  const replacements = {
+    name: getPlayerName(),
+    difficulty: getDifficultyLabel(state.difficultyKey),
+    rank: state.leaderboardRank
+  };
+  leaderboardResultEl.textContent = state.leaderboardRank
+    ? t('gameOver.savedRank', replacements)
+    : t('gameOver.savedUnranked', replacements);
+  leaderboardResultEl.hidden = false;
 }
 
 function persistSoundPreference() {
@@ -609,6 +846,7 @@ function resetGame() {
   state.attemptedChars = 0;
   state.wordPoints = 0;
   state.charPoints = 0;
+  state.leaderboardRank = null;
   state.statusMessage = '';
   state.statusKind = '';
   state.statusUntil = 0;
@@ -621,6 +859,16 @@ function resetGame() {
   state.spawnTimer = 0;
   state.spawnInterval = BASE_SPAWN_MS;
   state.difficultyTimer = 0;
+  state.elapsedMs = 0;
+  state.bestWordStreak = 0;
+  state.bestCharStreak = 0;
+  state.heartsLost = 0;
+  state.tntUsed = 0;
+  state.slowUsed = 0;
+  state.pauseUsed = 0;
+  state.goldEarned = 0;
+  state.silverEarned = 0;
+  state.goldSpent = 0;
   state.usedWords = [];
   state.inventory = { tnt: 1, slow: 1, pause: 1 };
   wordLayer.innerHTML = '';
@@ -639,6 +887,8 @@ function startGame() {
     state.difficultyKey = getSelectedDifficultyKey();
     state.languageKey = getSelectedLanguageKey();
     state.themeKey = getSelectedThemeKey();
+    state.playerName = sanitizePlayerName(playerNameInput ? playerNameInput.value : state.playerName);
+    persistPlayerName();
     applyLanguage();
     applyTheme();
   }
@@ -657,10 +907,13 @@ function endGame() {
   }
 
   state.shopOpen = false;
+  state.leaderboardRank = saveLeaderboardEntry();
   playSoundEffect('gameOver');
   finalScoreEl.textContent = String(state.score);
   renderHud();
   setScreen('game-over');
+  renderLeaderboardResult();
+  renderLeaderboard();
 }
 
 function createWordElement(text) {
@@ -816,14 +1069,17 @@ function applyAbility(slot) {
   if (slot === 1) {
     state.typedText = '';
     clearAllWords();
+    state.tntUsed += 1;
     playSoundEffect('tnt');
     showStatus(t('status.tntCleared'), 'good');
   } else if (slot === 2) {
     state.slowTimer = ABILITY_DURATION_MS;
+    state.slowUsed += 1;
     playSoundEffect('slow');
     showStatus(t('status.slowActive'), 'good');
   } else if (slot === 3) {
     state.pauseTimer = ABILITY_DURATION_MS;
+    state.pauseUsed += 1;
     playSoundEffect('pause');
     showStatus(t('status.pauseActive'), 'warn');
   }
@@ -853,6 +1109,7 @@ function buyShopItem(itemKey) {
   }
 
   state.wordPoints -= item.goldCost;
+  state.goldSpent += item.goldCost;
 
   if (itemKey === 'heart') {
     state.lives += 1;
@@ -875,6 +1132,8 @@ function trySubmitTypedWord() {
   removeWord(matchedWord.id);
   state.wordStreak += 1;
   state.wordPoints += 1;
+  state.goldEarned += 1;
+  state.bestWordStreak = Math.max(state.bestWordStreak, state.wordStreak);
   const scoreGain = SCORE_PER_WORD + (state.wordStreak * 3) + Math.floor(state.charStreak / 5);
   state.score += scoreGain;
   state.typedText = '';
@@ -896,6 +1155,7 @@ function handleWrongCharacter() {
 
 function damagePlayer() {
   state.lives -= 1;
+  state.heartsLost += 1;
   state.typedText = '';
   resetStreaks();
   playSoundEffect('heartLost');
@@ -953,6 +1213,7 @@ function gameLoop(timestamp) {
   const deltaMs = timestamp - state.lastFrameTime;
   const deltaSeconds = deltaMs / 1000;
   state.lastFrameTime = timestamp;
+  state.elapsedMs += deltaMs;
 
   if (state.shopOpen) {
     renderHud();
@@ -1032,6 +1293,8 @@ function handleNormalTyping(event) {
   state.typedText = nextTyped;
   state.charStreak += 1;
   state.charPoints += 1;
+  state.silverEarned += 1;
+  state.bestCharStreak = Math.max(state.bestCharStreak, state.charStreak);
   convertSilverIfNeeded();
   renderHud();
   trySubmitTypedWord();
@@ -1085,6 +1348,14 @@ shopButtons.forEach((button) => {
     buyShopItem(button.dataset.shopItem);
   });
 });
+difficultyInputs.forEach((input) => {
+  input.addEventListener('change', () => {
+    if (state.screen === 'start') {
+      state.difficultyKey = getSelectedDifficultyKey();
+      renderLeaderboard();
+    }
+  });
+});
 languageInputs.forEach((input) => {
   input.addEventListener('change', () => {
     if (state.screen === 'start') {
@@ -1100,6 +1371,9 @@ themeInputs.forEach((input) => {
       applyTheme();
     }
   });
+});
+playerNameInput.addEventListener('input', () => {
+  state.playerName = sanitizePlayerName(playerNameInput.value);
 });
 window.addEventListener('keydown', handleKeydown);
 window.addEventListener('resize', () => {

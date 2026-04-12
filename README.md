@@ -2,11 +2,11 @@
 
 Ordregn is a small browser typing game where words fall from the top of the screen and must be typed before they hit the ground.
 
-It is built for quick local play: start a small static server, open the game in a browser, and begin typing.
+It runs entirely in the browser and is meant for quick local play from a simple static server.
 
 ## Start Menu
 
-Before each game, you can choose:
+Before each round, you can choose:
 
 - Language: Norwegian or English
 - Difficulty:
@@ -16,14 +16,15 @@ Before each game, you can choose:
 - Theme:
   - Light = the original bright style
   - Dark = the darker modern style
+- Player name
 
-Norwegian is the default language.
+The player name is saved locally in the browser and used for the leaderboard.
 
 ## Goal
 
-Words appear on the screen and slowly move downward.
+Words appear over time and fall downward.
 
-Type a word exactly to remove it before it reaches the bottom. If a word hits the ground, you lose one heart.
+Type a full active word exactly to remove it before it reaches the bottom. If a word hits the ground, you lose one heart.
 
 The round ends when all hearts are gone.
 
@@ -43,7 +44,7 @@ The `Typed` field shows your current input.
 - `Escape` clears your current input.
 - Norwegian letters such as `æ`, `ø`, and `å` are supported when Norwegian is selected.
 
-If your input stops matching the start of any active word:
+If your input no longer matches the beginning of any active word:
 
 - the input is cleared
 - both streaks reset
@@ -58,7 +59,7 @@ Each completed word uses:
 - a bonus from Word Streak
 - a bonus from Char Streak
 
-That means clean, consistent typing gives better scores than simply surviving.
+Clean, consistent typing gives better scores than simply surviving.
 
 ## Streaks
 
@@ -169,6 +170,39 @@ Current prices:
 
 If your hearts are already full, you cannot buy another heart.
 
+## Sound
+
+The game includes simple built-in sound effects for successful words, mistakes, heart loss, TNT, shop actions, and other important events.
+
+Sound can be turned on or off from the action area.
+
+## Leaderboard
+
+Ordregn includes a browser-local leaderboard stored in `localStorage`.
+
+Important rules:
+
+- The leaderboard is separate for each difficulty level.
+- Score is the main value and is used to sort the list.
+- Higher scores appear above lower scores.
+- The player name is stored with every result.
+
+Each saved result also stores round statistics:
+
+- best word streak
+- best character streak
+- accuracy
+- hearts lost
+- TNT used
+- Slow used
+- Pause used
+- Gold earned
+- Silver earned
+- Gold spent
+- time spent
+
+The leaderboard shown on the start screen updates when you switch difficulty.
+
 ## Difficulty Ramp
 
 The game becomes harder over time by spawning words more frequently.
@@ -214,7 +248,7 @@ http://127.0.0.1:8000
 
 - `index.html` contains the page structure
 - `styles.css` contains the layout and themes
-- `game.js` contains the gameplay logic
+- `game.js` contains the gameplay logic, sound, and leaderboard handling
 - `words-no.js` contains the Norwegian word list
 - `words-en.js` contains the English word list
 
