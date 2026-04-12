@@ -42,6 +42,7 @@ const SCORE_PER_WORD = 10;
 const ABILITY_DURATION_MS = 10000;
 const SOUND_STORAGE_KEY = 'ordregn-sound-enabled';
 const PLAYER_NAME_STORAGE_KEY = 'ordregn-player-name';
+const SETTINGS_STORAGE_KEY = 'ordregn-settings-v1';
 const LEADERBOARD_STORAGE_KEY = 'ordregn-leaderboard-v1';
 const MAX_LEADERBOARD_ENTRIES = 10;
 
@@ -80,6 +81,21 @@ function loadStoredPlayerName() {
     return '';
   }
 }
+
+function loadStoredSettings() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(SETTINGS_STORAGE_KEY) || '{}');
+    const difficultyKey = ['adult', 'kids', 'small-kids'].includes(parsed.difficultyKey) ? parsed.difficultyKey : 'adult';
+    const languageKey = ['no', 'en'].includes(parsed.languageKey) ? parsed.languageKey : 'no';
+    const themeKey = ['light', 'dark'].includes(parsed.themeKey) ? parsed.themeKey : 'light';
+
+    return { difficultyKey, languageKey, themeKey };
+  } catch {
+    return { difficultyKey: 'adult', languageKey: 'no', themeKey: 'light' };
+  }
+}
+
+const storedSettings = loadStoredSettings();
 
 const TRANSLATIONS = {
   no: {
@@ -282,9 +298,9 @@ const state = {
   wordPoints: 0,
   charPoints: 0,
   playerName: loadStoredPlayerName(),
-  difficultyKey: 'adult',
-  languageKey: 'no',
-  themeKey: 'light',
+  difficultyKey: storedSettings.difficultyKey,
+  languageKey: storedSettings.languageKey,
+  themeKey: storedSettings.themeKey,
   soundEnabled: loadStoredSoundEnabled(),
   leaderboardRank: null,
   statusMessage: '',
@@ -336,6 +352,34 @@ function persistPlayerName() {
     window.localStorage.setItem(PLAYER_NAME_STORAGE_KEY, getPlayerName());
   } catch {
     // Ignore storage issues and keep the in-memory name.
+  }
+}
+
+function persistSettings() {
+  try {
+    window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify({
+      difficultyKey: state.difficultyKey,
+      languageKey: state.languageKey,
+      themeKey: state.themeKey
+    }));
+  } catch {
+    // Ignore storage issues and keep the current session playable.
+  }
+}
+
+function syncStartInputs() {
+  difficultyInputs.forEach((input) => {
+    input.checked = input.value === state.difficultyKey;
+  });
+  languageInputs.forEach((input) => {
+    input.checked = input.value === state.languageKey;
+  });
+  themeInputs.forEach((input) => {
+    input.checked = input.value === state.themeKey;
+  });
+
+  if (playerNameInput) {
+    playerNameInput.value = state.playerName;
   }
 }
 
@@ -888,6 +932,7 @@ function startGame() {
     state.languageKey = getSelectedLanguageKey();
     state.themeKey = getSelectedThemeKey();
     state.playerName = sanitizePlayerName(playerNameInput ? playerNameInput.value : state.playerName);
+    persistSettings();
     persistPlayerName();
     applyLanguage();
     applyTheme();
@@ -898,6 +943,21 @@ function startGame() {
   spawnWord();
   spawnWord();
   state.loopId = window.requestAnimationFrame(gameLoop);
+}
+
+function returnToMainMenu() {
+  if (state.loopId) {
+    window.cancelAnimationFrame(state.loopId);
+    state.loopId = null;
+  }
+
+  resetGame();
+  syncStartInputs();
+  persistSettings();
+  persistPlayerName();
+  setScreen('start');
+  applyLanguage();
+  applyTheme();
 }
 
 function endGame() {
@@ -1328,7 +1388,7 @@ function handleKeydown(event) {
 }
 
 startButton.addEventListener('click', startGame);
-restartButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', returnToMainMenu);
 soundToggleButton.addEventListener('click', () => {
   ensureAudioReady().finally(toggleSound);
 });
@@ -1352,6 +1412,7 @@ difficultyInputs.forEach((input) => {
   input.addEventListener('change', () => {
     if (state.screen === 'start') {
       state.difficultyKey = getSelectedDifficultyKey();
+      persistSettings();
       renderLeaderboard();
     }
   });
@@ -1360,6 +1421,7 @@ languageInputs.forEach((input) => {
   input.addEventListener('change', () => {
     if (state.screen === 'start') {
       state.languageKey = getSelectedLanguageKey();
+      persistSettings();
       applyLanguage();
     }
   });
@@ -1368,12 +1430,14 @@ themeInputs.forEach((input) => {
   input.addEventListener('change', () => {
     if (state.screen === 'start') {
       state.themeKey = getSelectedThemeKey();
+      persistSettings();
       applyTheme();
     }
   });
 });
 playerNameInput.addEventListener('input', () => {
   state.playerName = sanitizePlayerName(playerNameInput.value);
+  persistPlayerName();
 });
 window.addEventListener('keydown', handleKeydown);
 window.addEventListener('resize', () => {
@@ -1381,5 +1445,6 @@ window.addEventListener('resize', () => {
 });
 
 setScreen('start');
+syncStartInputs();
 applyLanguage();
 applyTheme();
