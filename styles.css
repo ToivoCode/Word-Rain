@@ -500,6 +500,10 @@ h3 {
   color: rgba(214, 79, 98, 0.22);
 }
 
+.heart-summary {
+  display: none;
+}
+
 .arena {
   position: relative;
   overflow: hidden;
@@ -810,6 +814,34 @@ h3 {
     overflow: hidden;
   }
 
+  body.game-playing {
+    background: #020817;
+  }
+
+  body.game-playing .app-shell {
+    padding:
+      calc(env(safe-area-inset-top) + 6px)
+      6px
+      calc(env(safe-area-inset-bottom) + 6px);
+  }
+
+  body.game-playing #game-screen.active {
+    height: calc(
+      var(--mobile-viewport-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 12px
+    );
+    padding: 18px 16px 16px;
+    gap: 12px;
+    border: 1px solid rgba(113, 159, 229, 0.35);
+    border-radius: 32px;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(47, 114, 202, 0.34), transparent 34%),
+      linear-gradient(145deg, #071633, #020917 70%);
+    box-shadow:
+      inset 0 1px 0 rgba(207, 229, 255, 0.3),
+      inset 0 0 0 3px rgba(53, 88, 145, 0.14),
+      0 18px 34px rgba(0, 4, 16, 0.42);
+  }
+
   .hud {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.45fr) minmax(0, 0.9fr);
     gap: 8px;
@@ -822,8 +854,8 @@ h3 {
 
   .hud-card {
     display: none;
-    min-height: 60px;
-    padding: 8px 10px;
+    min-height: 52px;
+    padding: 6px 10px;
     border-radius: 18px;
     text-align: center;
   }
@@ -834,7 +866,7 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
   }
 
   .hud-card .hud-label {
@@ -861,7 +893,7 @@ h3 {
 
   .hud-card-score .score-mark,
   .hud-card-accuracy .accuracy-mark {
-    font-size: 1.35rem;
+    font-size: 1rem;
   }
 
   .hud-card-score .score-mark {
@@ -869,7 +901,28 @@ h3 {
   }
 
   .hud-card strong {
-    font-size: 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  body.game-playing .hud-card {
+    min-height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  body.game-playing .hud-card strong,
+  body.game-playing .heart-summary .heart-total {
+    color: #f2f6ff;
+    font-size: 1rem;
+  }
+
+  body.game-playing .hud-card-score .score-mark,
+  body.game-playing .hud-card-accuracy .accuracy-mark,
+  body.game-playing .heart-summary {
+    font-size: 1.15rem;
   }
 
   .hearts {
@@ -883,6 +936,24 @@ h3 {
     font-size: 0.85rem;
   }
 
+  .hearts .heart {
+    display: none;
+  }
+
+  .heart-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #d64f62;
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .heart-summary .heart-total {
+    color: var(--text);
+    font-size: 0.85rem;
+  }
+
   .arena,
   .word-layer {
     min-height: 0;
@@ -893,13 +964,40 @@ h3 {
     border-radius: 20px;
   }
 
+  body.game-playing .arena {
+    border: 1px solid rgba(121, 190, 255, 0.48);
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(126, 204, 255, 0.72) 0 2px, transparent 3px),
+      radial-gradient(circle at 30% 28%, rgba(126, 204, 255, 0.5) 0 1px, transparent 2px),
+      radial-gradient(circle at 64% 18%, rgba(126, 204, 255, 0.45) 0 1px, transparent 2px),
+      radial-gradient(circle at 88% 10%, rgba(126, 204, 255, 0.62) 0 1px, transparent 2px),
+      radial-gradient(circle at 16% 66%, rgba(126, 204, 255, 0.38) 0 1px, transparent 2px),
+      radial-gradient(circle at 74% 54%, rgba(126, 204, 255, 0.42) 0 1px, transparent 2px),
+      linear-gradient(180deg, rgba(25, 77, 130, 0.9), rgba(2, 18, 42, 0.98)),
+      repeating-linear-gradient(90deg, rgba(126, 193, 255, 0.26), rgba(126, 193, 255, 0.26) 2px, transparent 2px, transparent 18%);
+    box-shadow:
+      inset 0 1px 0 rgba(192, 225, 255, 0.34),
+      inset 0 -26px 44px rgba(0, 0, 0, 0.3);
+  }
+
   .word {
     padding: 7px 12px;
     font-size: 0.95rem;
   }
 
+  body.game-playing .word {
+    border-color: rgba(187, 216, 255, 0.8);
+    box-shadow: 0 8px 16px rgba(0, 8, 26, 0.38);
+  }
+
   .ground {
     height: 10px;
+  }
+
+  body.game-playing .ground {
+    background: linear-gradient(180deg, #c9ff87, #61cb72 58%, #1c8d5b);
+    box-shadow: 0 -3px 13px rgba(137, 255, 164, 0.48);
   }
 
   .action-panel {
@@ -923,8 +1021,8 @@ h3 {
   }
 
   .action-button {
-    min-height: 64px;
-    padding: 8px 4px;
+    min-height: 48px;
+    padding: 6px 4px;
     border-radius: 16px;
     text-align: center;
     justify-items: center;
@@ -932,14 +1030,28 @@ h3 {
     gap: 4px;
   }
 
+  body.game-playing .action-button {
+    min-height: 52px;
+    border-color: rgba(87, 143, 213, 0.38);
+    background: linear-gradient(145deg, #0a2041, #04132c);
+    box-shadow: inset 0 1px 0 rgba(187, 218, 255, 0.12);
+  }
+
   .action-icon {
     min-height: 1em;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 
   .action-name {
-    font-size: 0.72rem;
-    letter-spacing: 0.03em;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .mobile-typing-bar {
@@ -950,6 +1062,13 @@ h3 {
     border-radius: 16px;
   }
 
+  body.game-playing .mobile-typing-bar {
+    min-height: 50px;
+    border-color: rgba(87, 143, 213, 0.38);
+    background: linear-gradient(145deg, #081d3c, #031126);
+    box-shadow: inset 0 1px 0 rgba(187, 218, 255, 0.1);
+  }
+
   #mobile-typing-input {
     width: 100%;
     min-width: 0;
@@ -958,13 +1077,22 @@ h3 {
     background: transparent;
     color: var(--text);
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
 
   #mobile-typing-input::placeholder {
     color: var(--muted);
     opacity: 1;
+  }
+
+  body.game-playing #mobile-typing-input {
+    color: #f2f6ff;
+  }
+
+  body.game-playing #mobile-typing-input::placeholder {
+    color: #96a9cf;
   }
 
   #mobile-typing-input:focus-visible {

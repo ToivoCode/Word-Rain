@@ -525,6 +525,7 @@ function setScreen(name) {
   startScreen.classList.toggle('active', name === 'start');
   gameScreen.classList.toggle('active', name === 'playing');
   gameOverScreen.classList.toggle('active', name === 'game-over');
+  document.body.classList.toggle('game-playing', name === 'playing');
 
   if (name !== 'playing') {
     blurMobileTypingInput();
@@ -801,6 +802,17 @@ function clearStatusIfExpired(now = performance.now()) {
 
 function renderHearts() {
   heartsEl.innerHTML = '';
+  heartsEl.setAttribute('aria-label', `${t('hud.hearts')}: ${state.lives}`);
+
+  const heartSummary = document.createElement('span');
+  heartSummary.className = 'heart-summary';
+  heartSummary.textContent = '\u2665';
+
+  const heartTotal = document.createElement('strong');
+  heartTotal.className = 'heart-total';
+  heartTotal.textContent = String(state.lives);
+  heartSummary.appendChild(heartTotal);
+  heartsEl.appendChild(heartSummary);
 
   for (let i = 0; i < START_LIVES; i += 1) {
     const heart = document.createElement('span');
