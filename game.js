@@ -1040,7 +1040,7 @@ function spawnWord() {
     text,
     normalizedText: text.toLocaleLowerCase(state.languageKey === 'en' ? 'en-US' : 'no-NO'),
     x,
-    y: -20,
+    y: isMobileLayout() ? 82 : -20,
     speed: FALL_SPEED + Math.random() * 18,
     element
   };
