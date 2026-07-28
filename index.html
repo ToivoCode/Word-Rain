@@ -2,7 +2,7 @@
 <html lang="no">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Ordregn</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -87,39 +87,39 @@
 
     <section id="game-screen" class="screen" aria-label="Game screen">
       <header class="hud panel">
-        <div class="hud-card">
+        <div class="hud-card hud-card-score">
           <span class="hud-label label-with-icon">
             <span class="simple-icon score-mark" aria-hidden="true">&#9733;</span>
             <span data-i18n="hud.score">Poeng</span>
           </span>
           <strong id="score">0</strong>
         </div>
-        <div class="hud-card">
+        <div class="hud-card hud-card-hearts">
           <span class="hud-label" data-i18n="hud.hearts">Hjerter</span>
           <div id="hearts" class="hearts" aria-label="Hearts"></div>
         </div>
-        <div class="hud-card">
+        <div class="hud-card hud-card-word-streak">
           <span class="hud-label label-with-icon">
             <span class="simple-icon flame-mark" aria-hidden="true">&#128293;</span>
             <span data-i18n="hud.wordStreak">Ordrekke</span>
           </span>
           <strong id="word-streak">0</strong>
         </div>
-        <div class="hud-card">
+        <div class="hud-card hud-card-char-streak">
           <span class="hud-label label-with-icon">
             <span class="simple-icon spark-mark" aria-hidden="true">&#10022;</span>
             <span data-i18n="hud.charStreak">Tegnrekke</span>
           </span>
           <strong id="char-streak">0</strong>
         </div>
-        <div class="hud-card">
+        <div class="hud-card hud-card-accuracy">
           <span class="hud-label label-with-icon">
             <span class="simple-icon accuracy-mark" aria-hidden="true">&#9678;</span>
             <span data-i18n="hud.accuracy">Nøyaktighet</span>
           </span>
           <strong id="accuracy">100%</strong>
         </div>
-        <div class="hud-card hud-card-full">
+        <div class="hud-card hud-card-full hud-card-typed">
           <span class="hud-label" data-i18n="hud.typed">Skriver</span>
           <strong id="typed-display" class="typed-display">-</strong>
         </div>
@@ -163,6 +163,11 @@
         </div>
       </section>
 
+      <div class="mobile-typing-bar panel">
+        <label class="sr-only" for="mobile-typing-input" data-i18n="hud.mobileTypeLabel">Skriv ordene</label>
+        <input id="mobile-typing-input" type="text" inputmode="text" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Skriv ordene">
+      </div>
+
       <section class="resource-footer panel" aria-label="Currencies">
         <div class="resource-pill">
           <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span>
@@ -187,6 +192,18 @@
             <button id="shop-close" class="secondary-button" type="button" data-i18n="shop.close">Lukk</button>
           </div>
           <p class="shop-help" data-i18n="shop.help">Kjøp én ladning med Gull. Sølv blir automatisk til Gull ved 100 Sølv.</p>
+          <div class="shop-balance" aria-label="Currencies">
+            <div class="shop-balance-item">
+              <span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span>
+              <span data-i18n="currency.gold">Gull</span>
+              <strong id="shop-word-points">0</strong>
+            </div>
+            <div class="shop-balance-item">
+              <span class="coin-icon silver" aria-hidden="true">&#x2B24;</span>
+              <span data-i18n="currency.silver">Sølv</span>
+              <strong id="shop-char-points">0</strong>
+            </div>
+          </div>
           <div class="shop-grid">
             <article class="shop-item">
               <h3 data-i18n="shop.tntTitle">TNT-ladning</h3>

@@ -81,11 +81,15 @@ window.NORWEGIAN_WORDS = [
   "vår",
   "vær",
   "vinter",
+  "deoksyribonukleinsyre",
   "yrke",
   "ytterjakke",
   "øl",
   "ørn",
   "åker",
   "årstid",
-  "åse"
+  "åse",
+  "bærsj",
+  "kamel",
+  "hjerte"
 ];

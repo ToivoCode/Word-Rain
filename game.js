@@ -15,7 +15,10 @@ const charStreakEl = document.getElementById('char-streak');
 const accuracyEl = document.getElementById('accuracy');
 const wordPointsEl = document.getElementById('word-points');
 const charPointsEl = document.getElementById('char-points');
+const shopWordPointsEl = document.getElementById('shop-word-points');
+const shopCharPointsEl = document.getElementById('shop-char-points');
 const typedDisplayEl = document.getElementById('typed-display');
+const mobileTypingInput = document.getElementById('mobile-typing-input');
 const finalScoreEl = document.getElementById('final-score');
 const leaderboardResultEl = document.getElementById('leaderboard-result');
 const effectStatusEl = document.getElementById('effect-status');
@@ -45,6 +48,7 @@ const PLAYER_NAME_STORAGE_KEY = 'ordregn-player-name';
 const SETTINGS_STORAGE_KEY = 'ordregn-settings-v1';
 const LEADERBOARD_STORAGE_KEY = 'ordregn-leaderboard-v1';
 const MAX_LEADERBOARD_ENTRIES = 10;
+const MOBILE_BREAKPOINT = 600;
 
 const COMMANDS = {
   1: { labelKey: 'ability.tnt', inventoryKey: 'tnt' },
@@ -147,6 +151,8 @@ const TRANSLATIONS = {
     'hud.charStreak': 'Tegnrekke',
     'hud.accuracy': 'Nøyaktighet',
     'hud.typed': 'Skriver',
+    'hud.mobileTypeLabel': 'Skriv ordene',
+    'hud.mobileTypePlaceholder': 'Skriv ordene',
     'ability.tnt': 'TNT',
     'ability.slow': 'Sakte',
     'ability.pause': 'Pause',
@@ -241,6 +247,8 @@ const TRANSLATIONS = {
     'hud.charStreak': 'Char Streak',
     'hud.accuracy': 'Accuracy',
     'hud.typed': 'Typed',
+    'hud.mobileTypeLabel': 'Type the words',
+    'hud.mobileTypePlaceholder': 'Type the words',
     'ability.tnt': 'TNT',
     'ability.slow': 'Slow',
     'ability.pause': 'Pause',
@@ -517,6 +525,11 @@ function setScreen(name) {
   startScreen.classList.toggle('active', name === 'start');
   gameScreen.classList.toggle('active', name === 'playing');
   gameOverScreen.classList.toggle('active', name === 'game-over');
+
+  if (name !== 'playing') {
+    blurMobileTypingInput();
+  }
+
   renderLeaderboardResult();
 }
 
@@ -576,6 +589,9 @@ function applyLanguage() {
   if (playerNameInput) {
     playerNameInput.placeholder = t('start.playerNamePlaceholder');
     playerNameInput.value = state.playerName;
+  }
+  if (mobileTypingInput) {
+    mobileTypingInput.placeholder = t('hud.mobileTypePlaceholder');
   }
   renderLeaderboard();
   renderLeaderboardResult();
@@ -837,6 +853,13 @@ function renderActionButtons() {
   countTntEl.textContent = `x${state.inventory.tnt}`;
   countSlowEl.textContent = `x${state.inventory.slow}`;
   countPauseEl.textContent = `x${state.inventory.pause}`;
+
+  actionButtons.forEach((button) => {
+    const slot = Number(button.dataset.slot);
+    const isActive = (slot === 2 && state.slowTimer > 0) || (slot === 3 && state.pauseTimer > 0);
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+  });
 }
 
 function renderShop() {
@@ -859,7 +882,10 @@ function renderHud() {
   accuracyEl.textContent = `${getAccuracyPercent()}%`;
   wordPointsEl.textContent = String(state.wordPoints);
   charPointsEl.textContent = String(state.charPoints);
+  shopWordPointsEl.textContent = String(state.wordPoints);
+  shopCharPointsEl.textContent = String(state.charPoints);
   typedDisplayEl.textContent = state.typedText || '-';
+  syncMobileTypingInput();
   renderHearts();
   renderStatus();
   renderCommandPrompt();
@@ -931,6 +957,7 @@ function startGame() {
   setScreen('playing');
   spawnWord();
   spawnWord();
+  focusMobileTypingInput();
   state.loopId = window.requestAnimationFrame(gameLoop);
 }
 
@@ -1082,6 +1109,7 @@ function convertSilverIfNeeded() {
 }
 
 function openShop() {
+  blurMobileTypingInput();
   state.shopOpen = true;
   state.typedText = '';
   updateWordHighlights();
@@ -1091,6 +1119,7 @@ function openShop() {
 function closeShop() {
   state.shopOpen = false;
   renderHud();
+  focusMobileTypingInput();
 }
 
 function applyAbility(slot) {
@@ -1297,39 +1326,32 @@ function gameLoop(timestamp) {
   state.loopId = window.requestAnimationFrame(gameLoop);
 }
 
-function handleNormalTyping(event) {
-  if (event.key === 'Backspace') {
-    event.preventDefault();
-    if (state.typedText.length > 0) {
-      state.typedText = state.typedText.slice(0, -1);
-      resetStreaks();
-      showStatus(t('status.backspaceReset'), 'warn');
-      renderHud();
-      updateWordHighlights();
-    }
-    return;
-  }
-
-  if (event.key === 'Escape') {
-    state.typedText = '';
-    renderHud();
-    updateWordHighlights();
-    return;
-  }
-
-  if (event.key.length !== 1) {
-    return;
-  }
-
+function isAllowedCharacter(character) {
   const allowedPattern = state.languageKey === 'en'
     ? /^[a-zA-Z]$/
     : /^[a-zA-Z\u00C6\u00D8\u00C5\u00E6\u00F8\u00E5]$/;
 
-  if (!allowedPattern.test(event.key)) {
+  return allowedPattern.test(character);
+}
+
+function removeTypedCharacters(count = 1) {
+  if (state.typedText.length === 0) {
     return;
   }
 
-  const nextTyped = normalizeInput(`${state.typedText}${event.key}`);
+  state.typedText = state.typedText.slice(0, Math.max(0, state.typedText.length - count));
+  resetStreaks();
+  showStatus(t('status.backspaceReset'), 'warn');
+  renderHud();
+  updateWordHighlights();
+}
+
+function handleTypedCharacter(character) {
+  if (!isAllowedCharacter(character)) {
+    return;
+  }
+
+  const nextTyped = normalizeInput(`${state.typedText}${character}`);
   const matches = findPrefixMatches(nextTyped);
 
   if (matches.length === 0) {
@@ -1350,8 +1372,87 @@ function handleNormalTyping(event) {
   updateWordHighlights();
 }
 
+function handleNormalTyping(event) {
+  if (event.key === 'Backspace') {
+    event.preventDefault();
+    removeTypedCharacters();
+    return;
+  }
+
+  if (event.key === 'Escape') {
+    state.typedText = '';
+    renderHud();
+    updateWordHighlights();
+    return;
+  }
+
+  if (event.key.length === 1) {
+    handleTypedCharacter(event.key);
+  }
+}
+
+function isMobileLayout() {
+  return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
+}
+
+function shouldUseMobileTypingInput() {
+  return Boolean(mobileTypingInput) && state.screen === 'playing' && !state.shopOpen && isMobileLayout();
+}
+
+function syncMobileTypingInput() {
+  if (mobileTypingInput && mobileTypingInput.value !== state.typedText) {
+    mobileTypingInput.value = state.typedText;
+  }
+}
+
+function focusMobileTypingInput() {
+  if (shouldUseMobileTypingInput()) {
+    mobileTypingInput.focus({ preventScroll: true });
+  }
+}
+
+function blurMobileTypingInput() {
+  if (mobileTypingInput && document.activeElement === mobileTypingInput) {
+    mobileTypingInput.blur();
+  }
+}
+
+function handleMobileTypingInput(event) {
+  if (!shouldUseMobileTypingInput() || event.isComposing) {
+    return;
+  }
+
+  ensureAudioReady();
+
+  if (event.inputType && event.inputType.startsWith('delete')) {
+    const normalizedValue = normalizeInput(mobileTypingInput.value);
+    const removedCount = Math.max(1, state.typedText.length - normalizedValue.length);
+    removeTypedCharacters(removedCount);
+    return;
+  }
+
+  const insertedText = event.data || '';
+  if (insertedText) {
+    Array.from(insertedText).forEach((character) => handleTypedCharacter(character));
+  }
+
+  syncMobileTypingInput();
+}
+
+function syncMobileViewportHeight() {
+  if (!window.visualViewport) {
+    return;
+  }
+
+  document.documentElement.style.setProperty('--mobile-viewport-height', `${Math.round(window.visualViewport.height)}px`);
+}
+
 function handleKeydown(event) {
   if (state.screen !== 'playing') {
+    return;
+  }
+
+  if (event.target === mobileTypingInput) {
     return;
   }
 
@@ -1384,7 +1485,11 @@ actionButtons.forEach((button) => {
   button.addEventListener('click', () => {
     if (state.screen === 'playing' && !state.shopOpen) {
       ensureAudioReady();
-      applyAbility(Number(button.dataset.slot));
+      const slot = Number(button.dataset.slot);
+      applyAbility(slot);
+      if (slot !== 4) {
+        focusMobileTypingInput();
+      }
     }
   });
 });
@@ -1433,12 +1538,18 @@ playerNameInput.addEventListener('input', () => {
   state.playerName = sanitizePlayerName(playerNameInput.value);
   persistPlayerName();
 });
+mobileTypingInput.addEventListener('input', handleMobileTypingInput);
 window.addEventListener('keydown', handleKeydown);
 window.addEventListener('resize', () => {
   state.words.forEach((word) => updateWordPosition(word));
+  syncMobileViewportHeight();
 });
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', syncMobileViewportHeight);
+}
 
 setScreen('start');
 syncStartInputs();
 applyLanguage();
 applyTheme();
+syncMobileViewportHeight();
