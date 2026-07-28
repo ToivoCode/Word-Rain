@@ -1169,7 +1169,7 @@ h3 {
   body.game-playing .hud {
     grid-column: 1 / -1;
     grid-row: 1;
-    z-index: 2;
+    z-index: 10;
     align-self: start;
     margin: calc(env(safe-area-inset-top) + 22px) 18px 0;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1179,7 +1179,10 @@ h3 {
   body.game-playing .arena {
     grid-column: 1 / -1;
     grid-row: 1;
-    z-index: 1;
+    z-index: auto;
+    isolation: auto;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     border: 0;
     border-radius: 0 0 28px 28px;
     background:
@@ -1192,6 +1195,14 @@ h3 {
       linear-gradient(180deg, #092c5d 0%, #04204a 28%, #020d28 100%),
       repeating-linear-gradient(90deg, rgba(126, 193, 255, 0.13), rgba(126, 193, 255, 0.13) 2px, transparent 2px, transparent 18%);
     box-shadow: inset 0 -26px 44px rgba(0, 0, 0, 0.3);
+  }
+
+  body.game-playing .word-layer {
+    z-index: 20;
+  }
+
+  body.game-playing .word {
+    z-index: 21;
   }
 
   body.game-playing .hud-card {
