@@ -89,7 +89,7 @@ window.NORWEGIAN_WORDS = [
   "åker",
   "årstid",
   "åse",
-  "bærsj",
+  "bæsj",
   "kamel",
   "hjerte"
 ];
