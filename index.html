@@ -2,7 +2,7 @@
 <html lang="no">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Ordregn</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -186,7 +186,7 @@
         <div class="shop-dialog panel" role="dialog" aria-modal="true" aria-labelledby="shop-title">
           <div class="shop-header">
             <div>
-              <p class="eyebrow" data-i18n="shop.paused">Pausert</p>
+              <p class="eyebrow" data-i18n="shop.paused">Pause</p>
               <h2 id="shop-title" data-i18n="shop.title">Butikk</h2>
             </div>
             <button id="shop-close" class="secondary-button" type="button" data-i18n="shop.close">Lukk</button>
@@ -210,6 +210,7 @@
               <p data-i18n="shop.tntDesc">Fjerner alle aktive ord.</p>
               <div class="shop-actions">
                 <button class="secondary-button shop-buy" type="button" data-shop-item="tnt"><span data-i18n="shop.buy">Kjøp</span><span>15</span><span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
+                <span class="shop-owned"><span data-i18n="shop.owned">Eier</span>: <strong data-shop-owned="tnt">1</strong></span>
               </div>
             </article>
             <article class="shop-item">
@@ -217,6 +218,7 @@
               <p data-i18n="shop.slowDesc">Halverer farten i 10 sekunder.</p>
               <div class="shop-actions">
                 <button class="secondary-button shop-buy" type="button" data-shop-item="slow"><span data-i18n="shop.buy">Kjøp</span><span>5</span><span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
+                <span class="shop-owned"><span data-i18n="shop.owned">Eier</span>: <strong data-shop-owned="slow">1</strong></span>
               </div>
             </article>
             <article class="shop-item">
@@ -224,6 +226,7 @@
               <p data-i18n="shop.pauseDesc">Stopper nye ord og bevegelse i 10 sekunder.</p>
               <div class="shop-actions">
                 <button class="secondary-button shop-buy" type="button" data-shop-item="pause"><span data-i18n="shop.buy">Kjøp</span><span>10</span><span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
+                <span class="shop-owned"><span data-i18n="shop.owned">Eier</span>: <strong data-shop-owned="pause">1</strong></span>
               </div>
             </article>
             <article class="shop-item">
@@ -231,6 +234,7 @@
               <p data-i18n="shop.heartDesc">Gjenoppretter ett hjerte opp til maks 10.</p>
               <div class="shop-actions">
                 <button class="secondary-button shop-buy" type="button" data-shop-item="heart"><span data-i18n="shop.buy">Kjøp</span><span>5</span><span class="coin-icon gold" aria-hidden="true">&#x1FA99;</span></button>
+                <span class="shop-owned"><span data-i18n="shop.owned">Eier</span>: <strong data-shop-owned="heart">10</strong></span>
               </div>
             </article>
           </div>

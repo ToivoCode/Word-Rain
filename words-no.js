@@ -84,7 +84,7 @@ window.NORWEGIAN_WORDS = [
   "deoksyribonukleinsyre",
   "yrke",
   "ytterjakke",
-  "øl",
+  "søl",
   "ørn",
   "åker",
   "årstid",

@@ -31,6 +31,7 @@ const shopOverlay = document.getElementById('shop-overlay');
 const shopCloseButton = document.getElementById('shop-close');
 const shopBackdrop = document.querySelector('.shop-backdrop');
 const shopButtons = Array.from(document.querySelectorAll('[data-shop-item]'));
+const shopOwnedEls = Array.from(document.querySelectorAll('[data-shop-owned]'));
 const wordLayer = document.getElementById('word-layer');
 const leaderboardDifficultyEl = document.getElementById('leaderboard-difficulty');
 const leaderboardEmptyEl = document.getElementById('leaderboard-empty');
@@ -160,7 +161,7 @@ const TRANSLATIONS = {
     'ability.open': 'åpne',
     'currency.gold': 'Gull',
     'currency.silver': 'Sølv',
-    'shop.paused': 'Pausert',
+    'shop.paused': 'Pause',
     'shop.title': 'Butikk',
     'shop.close': 'Lukk',
     'shop.help': 'Kjøp én ladning med Gull. Sølv blir automatisk til Gull ved 100 Sølv.',
@@ -173,6 +174,7 @@ const TRANSLATIONS = {
     'shop.heartTitle': 'Hjerte',
     'shop.heartDesc': 'Gjenoppretter ett hjerte opp til maks 10.',
     'shop.buy': 'Kjøp',
+    'shop.owned': 'Eier',
     'gameOver.eyebrow': 'Runden er over',
     'gameOver.title': 'Spillet er slutt',
     'gameOver.finalScore': 'Sluttpoeng:',
@@ -269,6 +271,7 @@ const TRANSLATIONS = {
     'shop.heartTitle': 'Heart',
     'shop.heartDesc': 'Restore one heart up to the max of 10.',
     'shop.buy': 'Buy',
+    'shop.owned': 'Owned',
     'gameOver.eyebrow': 'Round complete',
     'gameOver.title': 'Game Over',
     'gameOver.finalScore': 'Final score:',
@@ -746,6 +749,9 @@ function playSoundEffect(effectName) {
     case 'wrongCharacter':
       playTone({ type: 'square', frequency: 240, endFrequency: 170, gain: 0.03, attack: 0.005, release: 0.09 });
       break;
+    case 'unavailable':
+      playTone({ type: 'square', frequency: 180, endFrequency: 115, gain: 0.035, attack: 0.005, release: 0.12 });
+      break;
     case 'heartLost':
       playTone({ type: 'sawtooth', frequency: 280, endFrequency: 120, gain: 0.05, attack: 0.005, release: 0.28 });
       break;
@@ -868,8 +874,12 @@ function renderActionButtons() {
 
   actionButtons.forEach((button) => {
     const slot = Number(button.dataset.slot);
+    const command = COMMANDS[slot];
     const isActive = (slot === 2 && state.slowTimer > 0) || (slot === 3 && state.pauseTimer > 0);
+    const isUnavailable = command.inventoryKey && state.inventory[command.inventoryKey] <= 0;
     button.classList.toggle('active', isActive);
+    button.classList.toggle('is-unavailable', isUnavailable);
+    button.disabled = isUnavailable;
     button.setAttribute('aria-pressed', String(isActive));
   });
 }
@@ -877,6 +887,10 @@ function renderActionButtons() {
 function renderShop() {
   shopOverlay.classList.toggle('active', state.shopOpen);
   shopOverlay.setAttribute('aria-hidden', String(!state.shopOpen));
+  shopOwnedEls.forEach((element) => {
+    const itemKey = element.dataset.shopOwned;
+    element.textContent = String(itemKey === 'heart' ? state.lives : state.inventory[itemKey]);
+  });
 }
 
 function getAccuracyPercent() {
@@ -1149,7 +1163,7 @@ function applyAbility(slot) {
 
   const key = command.inventoryKey;
   if (state.inventory[key] <= 0) {
-    playSoundEffect('wrongCharacter');
+    playSoundEffect('unavailable');
     showStatus(t('status.noCharges', { item: getItemLabel(key) }), 'bad');
     return;
   }
@@ -1559,6 +1573,17 @@ window.addEventListener('resize', () => {
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', syncMobileViewportHeight);
 }
+
+window.addEventListener('gesturestart', (event) => {
+  if (isMobileLayout()) {
+    event.preventDefault();
+  }
+});
+window.addEventListener('touchstart', (event) => {
+  if (isMobileLayout() && event.touches.length > 1) {
+    event.preventDefault();
+  }
+}, { passive: false });
 
 setScreen('start');
 syncStartInputs();
