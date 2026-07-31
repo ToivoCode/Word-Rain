@@ -13,6 +13,7 @@ const heartsEl = document.getElementById('hearts');
 const wordStreakEl = document.getElementById('word-streak');
 const charStreakEl = document.getElementById('char-streak');
 const accuracyEl = document.getElementById('accuracy');
+const mobileGoldEl = document.getElementById('mobile-gold');
 const wordPointsEl = document.getElementById('word-points');
 const charPointsEl = document.getElementById('char-points');
 const shopWordPointsEl = document.getElementById('shop-word-points');
@@ -906,6 +907,7 @@ function renderHud() {
   wordStreakEl.textContent = String(state.wordStreak);
   charStreakEl.textContent = String(state.charStreak);
   accuracyEl.textContent = `${getAccuracyPercent()}%`;
+  mobileGoldEl.textContent = String(state.wordPoints);
   wordPointsEl.textContent = String(state.wordPoints);
   charPointsEl.textContent = String(state.charPoints);
   shopWordPointsEl.textContent = String(state.wordPoints);

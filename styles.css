@@ -406,6 +406,10 @@ h3 {
   grid-column: 1 / -1;
 }
 
+.hud-card-mobile-gold {
+  display: none;
+}
+
 .hud-label {
   display: block;
   font-size: 0.78rem;
@@ -436,6 +440,10 @@ h3 {
 
 .score-mark {
   color: #8d5c14;
+}
+
+.gold-mark {
+  color: #f2c84b;
 }
 
 .flame-mark {
@@ -923,7 +931,7 @@ h3 {
 
   .hud-card-score,
   .hud-card-hearts,
-  .hud-card-accuracy {
+  .hud-card-mobile-gold {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -939,7 +947,7 @@ h3 {
   }
 
   .hud-card-score .hud-label > span:last-child,
-  .hud-card-accuracy .hud-label > span:last-child,
+  .hud-card-mobile-gold .hud-label > span:last-child,
   .hud-card-hearts .hud-label {
     position: absolute;
     width: 1px;
@@ -953,8 +961,12 @@ h3 {
   }
 
   .hud-card-score .score-mark,
-  .hud-card-accuracy .accuracy-mark {
+  .hud-card-mobile-gold .gold-mark {
     font-size: 1rem;
+  }
+
+  .hud-card-mobile-gold .gold-mark {
+    font-size: 1.15rem;
   }
 
   .hud-card-score .score-mark {
@@ -981,9 +993,12 @@ h3 {
   }
 
   body.game-playing .hud-card-score .score-mark,
-  body.game-playing .hud-card-accuracy .accuracy-mark,
   body.game-playing .heart-summary {
     font-size: 1.15rem;
+  }
+
+  body.game-playing .hud-card-mobile-gold .gold-mark {
+    font-size: 1.3rem;
   }
 
   .hearts {
@@ -1286,9 +1301,12 @@ h3 {
   }
 
   body.game-playing .hud-card-score .score-mark,
-  body.game-playing .hud-card-accuracy .accuracy-mark,
   body.game-playing .heart-summary {
     font-size: 1.3rem;
+  }
+
+  body.game-playing .hud-card-mobile-gold .gold-mark {
+    font-size: 1.45rem;
   }
 
   body.game-playing .action-panel {
