@@ -94,11 +94,11 @@ function loadStoredSettings() {
     const parsed = JSON.parse(window.localStorage.getItem(SETTINGS_STORAGE_KEY) || '{}');
     const difficultyKey = ['adult', 'kids', 'small-kids'].includes(parsed.difficultyKey) ? parsed.difficultyKey : 'adult';
     const languageKey = ['no', 'en'].includes(parsed.languageKey) ? parsed.languageKey : 'no';
-    const themeKey = ['light', 'dark'].includes(parsed.themeKey) ? parsed.themeKey : 'light';
+    const themeKey = ['light', 'dark'].includes(parsed.themeKey) ? parsed.themeKey : 'dark';
 
     return { difficultyKey, languageKey, themeKey };
   } catch {
-    return { difficultyKey: 'adult', languageKey: 'no', themeKey: 'light' };
+    return { difficultyKey: 'adult', languageKey: 'no', themeKey: 'dark' };
   }
 }
 
@@ -693,7 +693,7 @@ function getSelectedLanguageKey() {
 
 function getSelectedThemeKey() {
   const selected = themeInputs.find((input) => input.checked);
-  return selected ? selected.value : 'light';
+  return selected ? selected.value : 'dark';
 }
 
 function getSelectedSoundEnabled() {
@@ -1729,3 +1729,4 @@ applyTheme();
 syncMobileViewportHeight();
 
 if (location.hash === "#high-scores") showHighScores(false);
+

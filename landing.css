@@ -1,0 +1,66 @@
+/* Landing page composition. Shared menu tokens keep both themes consistent. */
+body:has(#start-screen.active) .app-shell { width: min(1236px, calc(100% - 80px)); padding: 40px 0; }
+#start-screen .start-hero { padding: 44px 24px 34px; margin-bottom: 36px; border-radius: 18px; background-position: center 57%; }
+body[data-theme] #start-screen h1 { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(60px, 7vw, 88px); font-weight: 700; letter-spacing: -.045em; margin-bottom: 20px; }
+#start-screen .lead { max-width: 530px; font-size: 17px; line-height: 1.6; margin-bottom: 24px; }
+body[data-theme] #start-screen #start-button { min-height: 54px; border-radius: 14px; }
+body[data-theme] #start-screen .start-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; max-width: none; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; }
+#start-screen .settings-heading { grid-column: 1 / -1; display: block; margin: 0 0 2px; }
+#start-screen .settings-heading h2 { font: 700 30px/1.2 Georgia, 'Times New Roman', serif; letter-spacing: -.025em; margin-bottom: 5px; }
+#start-screen .settings-note { font-size: 16px; letter-spacing: 0; }
+body[data-theme] #start-screen :is(.difficulty-picker, .player-name-group, .leaderboard-panel) { position: relative; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 18px; margin: 0; padding: 22px 24px; border: 1px solid var(--page-line); border-radius: 18px; background: linear-gradient(130deg, var(--page-surface), var(--page-inset)); box-shadow: inset 0 1px 0 #ffffff03; min-width: 0; }
+#start-screen .setting-description { gap: 18px; min-width: 0; }
+#start-screen .setting-description strong, #start-screen .setting-description label, #start-screen .leaderboard-header h3 { font: 700 20px/1.25 Georgia, 'Times New Roman', serif; letter-spacing: -.02em; }
+#start-screen .setting-description p { font-size: 14px; margin-top: 5px; }
+body[data-theme] #start-screen .setting-icon { width: 54px; height: 54px; flex: 0 0 54px; border-radius: 50%; border: 0; }
+body[data-theme] #start-screen .icon-1 { background: #8274ee26; color: #b6b0ff; }
+body[data-theme] #start-screen .icon-2 { background: #e8b65426; color: #e4c789; }
+body[data-theme] #start-screen .icon-3 { background: #46c4ac26; color: #8ddbcc; }
+body[data-theme] #start-screen .icon-4 { background: #af82e52b; color: #cbb1fa; }
+body[data-theme='light'] #start-screen .setting-icon { color: #345f94; }
+#start-screen .setting-options { width: auto; margin-left: 72px; gap: 14px; }
+body[data-theme] #start-screen .difficulty-option { display: flex; flex: 1; min-width: 0; min-height: 56px; padding: 11px 10px; border-radius: 12px; }
+body[data-theme] #start-screen .difficulty-option:has(input:checked) { border-color: #6ba7ff; box-shadow: inset 0 0 0 1px #6ba7ff; }
+#start-screen .difficulty-name { font-size: 14px; }
+#start-screen .difficulty-meta { font-size: 12px; }
+#start-screen .flag { width: 25px; height: 25px; margin-right: 5px; flex-shrink: 0; }
+#start-screen .difficulty-picker:has(input[name='theme']) .difficulty-option { overflow: hidden; padding: 0 0 9px; gap: 8px; }
+#start-screen .difficulty-picker:has(input[name='theme']) .difficulty-option::before { content: ''; width: 100%; height: 54px; background: url('assets/nordic-day.png') center 53% / cover; }
+#start-screen .difficulty-picker:has(input[name='theme']) .difficulty-option:has(input[value='dark'])::before { background-image: url('assets/nordic-night.webp'); }
+#start-screen .difficulty-picker:has(input[name='theme']) .difficulty-name { font-size: 12px; }
+#start-screen .text-input { width: calc(100% - 72px); margin-left: 72px; min-height: 52px; }
+body[data-theme] #start-screen .leaderboard-panel { gap: 0; padding-left: 96px; }
+body[data-theme] #start-screen .trophy-icon { left: 24px; top: 22px; width: 54px; height: 54px; border: 0; background: #dca53230; color: #efc86c; }
+#start-screen .leaderboard-header { min-height: 54px; gap: 12px; }
+#start-screen .leaderboard-header .eyebrow { font-size: 9px; letter-spacing: .1em; }
+#start-screen .leaderboard-difficulty { margin-left: auto; white-space: nowrap; }
+#start-screen .leaderboard-empty { margin: 18px 0 0; line-height: 1.6; font-size: 14px; }
+#start-screen .menu-best-score .score-summary { grid-template-columns: 40px minmax(0, 1fr) 48px 75px; gap: 10px; }
+#start-screen .menu-best-score .score-points { padding-left: 0; }
+#start-screen .menu-best-score .score-points::before { display: none; }
+#start-screen .scores-link { font-size: 13px; margin-top: 14px; align-self: flex-start; }
+@media (max-width: 1050px) {
+  #start-screen .setting-options { margin-left: 0; gap: 10px; }
+  #start-screen .text-input { width: 100%; margin-left: 0; }
+  body[data-theme] #start-screen .leaderboard-panel { padding-left: 24px; }
+  #start-screen .leaderboard-header { padding-left: 72px; }
+}
+@media (max-width: 760px) {
+  body:has(#start-screen.active) .app-shell { width: calc(100% - 32px); padding: 16px 0 28px; }
+  #start-screen .start-hero { padding: 36px 20px 30px; margin-bottom: 26px; }
+  body[data-theme] #start-screen h1 { font-size: clamp(48px, 10vw, 70px); }
+  #start-screen .lead { font-size: 15px; }
+  body[data-theme] #start-screen .start-settings { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  #start-screen .settings-heading h2 { font-size: 26px; }
+  #start-screen .settings-note { font-size: 14px; }
+  body[data-theme] #start-screen :is(.difficulty-picker, .player-name-group, .leaderboard-panel) { padding: 18px; gap: 14px; }
+  #start-screen .setting-description strong, #start-screen .setting-description label { font-size: 18px; }
+  #start-screen .setting-description p { font-size: 13px; }
+  body[data-theme] #start-screen .trophy-icon { left: 18px; top: 18px; display: grid; }
+  #start-screen .leaderboard-header { padding-left: 68px; }
+  #start-screen .leaderboard-difficulty { padding: 7px 9px; }
+  #start-screen .menu-best-score .score-summary { grid-template-columns: 40px minmax(0, 1fr) 48px 65px; }
+  #start-screen .menu-best-score .score-duration { grid-column: auto; grid-row: auto; flex-direction: column; align-items: flex-start; gap: 4px; }
+  #start-screen .menu-best-score .score-points { grid-column: auto; grid-row: auto; flex-direction: column; align-items: flex-start; gap: 4px; }
+}
+
