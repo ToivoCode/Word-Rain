@@ -201,7 +201,11 @@ Each saved result also stores round statistics:
 - Gold spent
 - time spent
 
-The leaderboard shown on the start screen updates when you switch difficulty.
+The main menu shows only the first-place round for the selected difficulty, with a link to the dedicated `#high-scores` page. The high-score page includes a difficulty filter and expandable round statistics.
+
+After a round ends, the high-score page opens with the latest result outlined, labeled, and expanded. Use **Start new game** to play at the difficulty currently selected on the high-score page, or **Go to main menu** to change other settings. The page supports browser back/forward navigation and direct links.
+
+New results are no longer capped at ten entries. Existing saved results remain available. New rounds also track hearts purchased; older rounds show a dash for this previously unrecorded statistic. If browser storage is unavailable, new results remain visible for the current session and the result message explains that they were not persisted.
 
 ## Difficulty Ramp
 
@@ -261,3 +265,9 @@ Ordregn uses plain:
 - vanilla JavaScript
 
 There are no frameworks, no backend, and no external dependencies.
+
+## Word selection
+
+The game uses all 591 Norwegian and 582 English words. Each language has its own shuffled word bag. Starting another round or switching languages does not reset a bag: every word is used once before that language is reshuffled. Reloading the page starts fresh bags. Word lists are never modified by the shuffle.
+
+The script URLs in `index.html` include content versions to prevent reuse of older cached scripts. Update these versions whenever the corresponding JavaScript files change.

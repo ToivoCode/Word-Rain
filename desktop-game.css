@@ -1,0 +1,102 @@
+/* The existing mobile/tablet game remains in styles.css, unchanged. */
+.desktop-game-brand { display: none; }
+@media (min-width: 861px) {
+  body.game-playing {
+    --game-surface: #12213ae8;
+    --game-line: #8aaff32b;
+    --game-muted: #a6bcdb;
+    --game-text: #edf4ff;
+    background: radial-gradient(ellipse at 50% 0%, #23446d80, transparent 65%), #081323;
+    color: var(--game-text);
+  }
+  body.game-playing .app-shell { width: min(1180px, calc(100% - 64px)); padding: 20px 0; }
+  #game-screen.active { gap: 12px; --arena-height: clamp(280px, calc(100dvh - 470px), 680px); }
+  #game-screen .panel { border-color: var(--game-line); background: var(--game-surface); box-shadow: 0 10px 32px #02091624, inset 0 1px 0 #ffffff08; border-radius: 20px; }
+  .desktop-game-brand { display: flex; align-items: center; gap: 15px; padding: 0 8px 3px; }
+  .game-droplets { width: 42px; height: 48px; background: url('assets/game-drops.svg') center / contain no-repeat; filter: drop-shadow(0 0 9px #9bc7ff35); }
+  .desktop-game-brand h2 { font-size: 34px; line-height: 1; letter-spacing: -.025em; margin: 0 0 7px; }
+  .desktop-game-brand .eyebrow { font-size: 9px; letter-spacing: .24em; color: var(--game-muted); margin: 0; }
+  #game-screen .hud { padding: 0; grid-template-columns: 1fr 1.7fr 1.2fr 1.2fr 1.25fr; gap: 0; row-gap: 12px; border: 0; background: none; box-shadow: none; backdrop-filter: none; }
+  #game-screen .hud-card { position: relative; min-width: 0; min-height: 68px; padding: 13px 18px 12px 55px; border: 0; border-top: 1px solid var(--game-line); border-bottom: 1px solid var(--game-line); border-radius: 0; background: var(--game-surface); }
+  #game-screen .hud-card-score { border-radius: 20px 0 0 20px; border-left: 1px solid var(--game-line); }
+  #game-screen .hud-card-accuracy { border-radius: 0 20px 20px 0; border-right: 1px solid var(--game-line); }
+  #game-screen .hud-card:not(.hud-card-score):not(.hud-card-typed):not(.hud-card-mobile-gold)::before { content: ''; position: absolute; left: 0; top: 17px; bottom: 17px; width: 1px; background: var(--game-line); }
+  #game-screen .hud-label { color: var(--game-muted); font-size: 10px; letter-spacing: .12em; margin-bottom: 6px; white-space: nowrap; }
+  #game-screen .hud-card > strong { font-size: 21px; font-weight: 600; line-height: 1; }
+  #game-screen .hud-card .simple-icon { position: absolute; left: 16px; top: 22px; width: 27px; height: 27px; font-size: 0; background-position: center; background-size: contain; background-repeat: no-repeat; }
+  #game-screen .score-mark { background-image: url('assets/game-score.svg'); }
+  #game-screen .flame-mark { background-image: url('assets/game-flame.svg'); }
+  #game-screen .spark-mark { background-image: url('assets/game-spark.svg'); }
+  #game-screen .accuracy-mark { background-image: url('assets/game-accuracy.svg'); }
+  #game-screen .hud-card-hearts { padding-left: 20px; }
+  #game-screen .hearts { gap: 5px; align-items: center; min-height: 22px; flex-wrap: nowrap; }
+  #game-screen .heart { width: 15px; height: 16px; font-size: 0; background: url('assets/game-heart.svg') center / contain no-repeat; }
+  #game-screen .heart.empty { opacity: .2; filter: grayscale(1); }
+  #game-screen .hud-card-typed { padding: 11px 16px 13px; border: 1px solid var(--game-line); border-radius: 17px; }
+  #game-screen .hud-card-typed .hud-label { margin-left: 3px; }
+  #game-screen .typed-display { display: block; min-height: 38px; padding: 8px 14px; border: 1px solid #81acfa; border-radius: 10px; color: #d6e9ff; background: #223c622e; box-shadow: 0 0 0 3px #85aaff0c, inset 0 0 20px #85aaff0a; }
+  #game-screen .arena { min-height: var(--arena-height); border: 1px solid #83b8f378; background: linear-gradient(#0a224b0d,#0a183522), url('assets/nordic-night.webp') center 65% / cover no-repeat; box-shadow: 0 16px 40px #00000030, inset 0 0 40px #0b1b3344; }
+  #game-screen .arena::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), #b4d5ff0c calc(10% - 1px) 10%); }
+  #game-screen .word-layer { height: var(--arena-height); min-height: var(--arena-height); }
+  #game-screen .word { padding: 9px 18px; border-radius: 18px; border: 1px solid #eef7ff; background: linear-gradient(135deg, #ffffff, #d5e5ff); color: #10243f; box-shadow: 0 0 22px #9bc8ff38, 0 5px 14px #00122c40, inset 0 -2px 4px #85b1e526; font-size: 17px; letter-spacing: .015em; }
+  #game-screen .word::before { content: ''; pointer-events: none; position: absolute; bottom: calc(100% + 1px); left: 14%; right: 14%; height: 48px; background: repeating-linear-gradient(90deg, transparent 0 11px, #b8d9ff50 12px, transparent 14px 23px); mask-image: linear-gradient(transparent, #000); }
+  #game-screen .word.matching { background: linear-gradient(130deg,#eafff1,#adedd6); border-color: #c8ffe7; color: #185340; box-shadow: 0 0 0 2px #80e7c36b, 0 0 28px #86ffd540; }
+  #game-screen .word.warning { color: #a62e49; border-color: #ffb4c4; background: #fff0f1; box-shadow: 0 0 22px #ff527b44; }
+  #game-screen .ground { height: 13px; border-top: 2px solid #d3ffaf; background: linear-gradient(#a6eab1,#4d9a92); box-shadow: 0 -2px 16px #c6ff8580; }
+  #game-screen .action-panel { padding: 10px 14px 13px; }
+  #game-screen .action-panel-top { margin-bottom: 9px; gap: 12px; }
+  #game-screen .status-chip { font-size: 11px; padding: 6px 11px; border-color: var(--game-line); background: #93b7ef0c; color: var(--game-text); }
+  #game-screen .status-chip.good { color: #8ae3c0; }
+  #game-screen .status-chip.bad { color: #ff9eaf; }
+  #game-screen .status-chip.warn { color: #f1d38a; }
+  #game-screen .command-prompt { padding: 0; font-size: 11px; background: none; color: var(--game-muted); }
+  #game-screen .action-menu { gap: 10px; }
+  #game-screen .action-button { --ability: 142, 133, 225; position: relative; grid-template-columns: 28px 39px 1fr; grid-template-rows: auto auto; column-gap: 12px; row-gap: 3px; align-items: center; padding: 12px; border-radius: 14px; border: 1px solid rgba(var(--ability), .45); background: linear-gradient(135deg, rgba(var(--ability), .22), rgba(var(--ability), .07)); color: var(--game-text); box-shadow: inset 0 1px 0 #ffffff07; }
+  #game-screen .action-button[data-slot='1'] { --ability: 229, 115, 137; }
+  #game-screen .action-button[data-slot='2'] { --ability: 94, 170, 237; }
+  #game-screen .action-button[data-slot='4'] { --ability: 223, 177, 101; }
+  #game-screen .action-button:hover:not(:disabled), #game-screen .action-button.active { background: linear-gradient(135deg, rgba(var(--ability), .36), rgba(var(--ability), .12)); border-color: rgba(var(--ability), .8); transform: translateY(-2px); box-shadow: 0 6px 18px #00000020; }
+  #game-screen .action-button:focus-visible, #game-screen .secondary-button:focus-visible { outline: 2px solid #b3d5ff; outline-offset: 3px; }
+  #game-screen .action-number { grid-column: 1; grid-row: 1 / 3; display: grid; place-items: center; width: 28px; height: 32px; border: 1px solid rgba(var(--ability), .35); border-radius: 6px; background: #ffffff08; color: var(--game-text); font-size: 13px; letter-spacing: 0; box-shadow: inset 0 -2px 0 #00000018; }
+  #game-screen .action-icon { grid-column: 2; grid-row: 1 / 3; width: 39px; height: 39px; font-size: 0; background-position: center; background-size: contain; background-repeat: no-repeat; filter: drop-shadow(0 3px 3px #00000020); }
+  #game-screen .tnt-mark { background-image: url('assets/game-tnt.svg'); }
+  #game-screen .slow-mark { background-image: url('assets/game-slow.svg'); }
+  #game-screen .pause-mark { background-image: url('assets/game-pause.svg'); }
+  #game-screen .shop-mark { background-image: url('assets/game-shop.svg'); }
+  #game-screen .action-name { grid-column: 3; grid-row: 1; align-self: end; font-size: 14px; }
+  #game-screen .action-count { grid-column: 3; grid-row: 2; color: var(--game-muted); font-size: 11px; }
+  #game-screen .resource-footer { padding: 0 3px; background: none; border: 0; box-shadow: none; backdrop-filter: none; }
+  #game-screen .resource-pill { padding: 8px 14px; background: var(--game-surface); border-color: var(--game-line); gap: 10px; font-size: 14px; }
+  #game-screen .resource-label { font-size: 9px; color: var(--game-muted); }
+  #game-screen .shop-overlay { position: fixed; backdrop-filter: blur(8px); }
+  #game-screen .shop-dialog { color: var(--game-text); border-color: #7295cb55; }
+  #game-screen .shop-dialog .eyebrow, #game-screen .shop-help, #game-screen .shop-item p, #game-screen .shop-owned { color: var(--game-muted); }
+  #game-screen .shop-item { background: #8baff011; border-color: var(--game-line); }
+  #game-screen .secondary-button { color: var(--game-text); background: #8baff018; border-color: var(--game-line); }
+  /* Light mode retains its daytime character around the blue-hour playfield. */
+  body[data-theme='light'].game-playing { --game-surface: #ffffffd9; --game-line: #617f9c2c; --game-muted: #566e89; --game-text: #20354e; background: radial-gradient(ellipse at 50% 0%,#ffffff,transparent 70%),#e5edf4; }
+  body[data-theme='light'] #game-screen .typed-display { color: #244875; background: #f3f7fd; border-color: #8baedc; }
+  body[data-theme='light'] #game-screen .status-chip.good { color: #27765b; }
+  body[data-theme='light'] #game-screen .status-chip.bad { color: #b33953; }
+  body[data-theme='light'] #game-screen .status-chip.warn { color: #8e671f; }
+  body[data-theme='light'] #game-screen .action-button { background: linear-gradient(135deg, rgba(var(--ability), .16), rgba(var(--ability), .05)); }
+  body[data-theme='light'] #game-screen .shop-dialog { background: #f7faff; }
+  @media (max-width: 1050px) {
+    body.game-playing .app-shell { width: calc(100% - 32px); }
+    #game-screen .hud { grid-template-columns: 1fr 1.55fr 1.15fr 1.15fr 1.2fr; }
+    #game-screen .hud-card { padding-left: 43px; padding-right: 8px; }
+    #game-screen .hud-card .simple-icon { left: 11px; width: 23px; }
+    #game-screen .hud-card-hearts { padding-left: 13px; }
+    #game-screen .hearts { gap: 3px; }
+    #game-screen .heart { width: 12px; }
+    #game-screen .hud-card-typed { padding-left: 16px; }
+    #game-screen .action-button { column-gap: 7px; grid-template-columns: 24px 32px 1fr; padding: 10px; }
+    #game-screen .action-icon { width: 32px; height: 36px; }
+    #game-screen .action-number { width: 24px; }
+    #game-screen .command-prompt { font-size: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #game-screen .action-button { transition: none; }
+    #game-screen .action-button:hover { transform: none; }
+  }
+}

@@ -6,6 +6,8 @@
   <title>Ordregn</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="start.css">
+  <link rel="stylesheet" href="desktop-game.css">
+  <link rel="stylesheet" href="high-scores.css">
 </head>
 <body data-theme="light">
   <main class="app-shell">
@@ -93,11 +95,16 @@
         </div>
         <p id="leaderboard-empty" class="leaderboard-empty">Ingen resultater ennå.</p>
         <ol id="leaderboard-list" class="leaderboard-list"></ol>
+        <a id="high-scores-link" class="scores-link" href="#high-scores"><span data-i18n="scores.viewAll">Se alle resultater</span><span aria-hidden="true"> →</span></a>
       </section>
       </div>
     </section>
 
     <section id="game-screen" class="screen" aria-label="Game screen">
+      <div class="desktop-game-brand">
+        <span class="game-droplets" aria-hidden="true"></span>
+        <div><h2 data-i18n="start.title">Ordregn</h2><p class="eyebrow" data-i18n="start.eyebrow">Norsk skrivelek</p></div>
+      </div>
       <header class="hud panel">
         <div class="hud-card hud-card-score">
           <span class="hud-label label-with-icon">
@@ -261,17 +268,22 @@
       </section>
     </section>
 
-    <section id="game-over-screen" class="panel screen" aria-labelledby="game-over-title">
-      <p class="eyebrow" data-i18n="gameOver.eyebrow">Runden er over</p>
-      <h2 id="game-over-title" data-i18n="gameOver.title">Spillet er slutt</h2>
-      <p class="lead"><span data-i18n="gameOver.finalScore">Sluttpoeng:</span> <strong id="final-score">0</strong></p>
-      <p id="leaderboard-result" class="game-over-note"></p>
-      <button id="restart-button" class="primary-button" type="button" data-i18n="gameOver.restart">Start på nytt</button>
+    <section id="high-score-screen" class="screen" aria-labelledby="high-score-title">
+      <header class="scores-hero">
+        <div class="scores-title-group"><span class="scores-trophy" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6h20v12a10 10 0 0 1-20 0V6Zm0 4H6v6a10 10 0 0 0 11 10m17-16h8v6a10 10 0 0 1-11 10M24 28v12m-9 2h18"/></svg></span>
+          <div><p class="eyebrow" data-i18n="leaderboard.eyebrow">Lokal toppliste</p><h1 id="high-score-title" tabindex="-1" data-i18n="leaderboard.title">Beste runder</h1><p class="scores-description" data-i18n="scores.description">Dine beste resultater, sortert etter høyest poengsum.</p></div>
+        </div>
+        <div class="scores-filter"><label for="scores-difficulty" data-i18n="start.difficultyLegend">Vanskelighetsgrad</label><select id="scores-difficulty"><option value="adult" data-i18n="difficulty.adult">Voksne</option><option value="kids" data-i18n="difficulty.kids">Barn</option><option value="small-kids" data-i18n="difficulty.smallKids">Små barn</option></select></div>
+      </header>
+      <div class="scores-toolbar"><p id="leaderboard-result" role="status"></p><div class="scores-actions"><button id="restart-button" class="primary-button" type="button" data-i18n="scores.playAgain">Start nytt spill</button><button id="scores-main-menu" class="secondary-button" type="button" data-i18n="scores.mainMenu">Gå til hovedmenyen</button></div></div>
+      <p id="scores-empty" class="scores-empty" data-i18n="scores.empty">Ingen runder ennå. Spill en runde og sett den første rekorden!</p>
+      <ol id="scores-list" class="scores-list"></ol>
+      <p class="scores-local-note" data-i18n="scores.localNote">Resultatene lagres lokalt i denne nettleseren.</p>
     </section>
   </main>
 
-  <script src="words-no.js"></script>
-  <script src="words-en.js"></script>
-  <script src="game.js"></script>
+  <script src="words-no.js?v=f06e462fa8ec"></script>
+  <script src="words-en.js?v=2b949af20dfa"></script>
+  <script src="game.js?v=aefc15714a26"></script>
 </body>
 </html>
