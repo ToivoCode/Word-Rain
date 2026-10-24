@@ -5,29 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Ordregn</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="start.css">
 </head>
 <body data-theme="light">
   <main class="app-shell">
-    <section id="start-screen" class="panel screen active" aria-labelledby="game-title">
+    <section id="start-screen" class="screen active" aria-labelledby="game-title">
+      <div class="start-scenery" aria-hidden="true"></div>
+      <div class="word-rain" aria-hidden="true">
+        <span class="rain-word rain-mountain">fjell</span><span class="rain-word rain-friend">venn</span>
+        <span class="rain-word rain-dream">drøm</span><span class="rain-word rain-sun">sol</span>
+        <span class="rain-word rain-cat">katt</span><span class="rain-word rain-snow">snø</span>
+      </div>
+      <header class="start-hero">
       <p class="eyebrow" data-i18n="start.eyebrow">Norsk skrivelek</p>
       <h1 id="game-title" data-i18n="start.title">Ordregn</h1>
       <p class="lead" data-i18n="start.lead">Skriv ordene før de treffer bakken. Bygg opp rekker, tjen valuta og bruk hjelpeevner når skjermen blir full.</p>
-      <button id="start-button" class="primary-button" type="button" data-i18n="start.button">Start spill</button>
+      <button id="start-button" class="primary-button" type="button"><span class="play-icon" aria-hidden="true"></span><span data-i18n="start.button">Start spill</span></button>
+      </header>
+      <div class="start-settings">
+        <div class="settings-heading"><h2 data-i18n="start.settings">Innstillinger</h2><span class="settings-note" data-i18n="start.makeItYours">Finn din flyt</span></div>
       <fieldset class="difficulty-picker">
-        <legend class="hud-label" data-i18n="start.languageLegend">Språk</legend>
+        <legend class="sr-only" data-i18n="start.languageLegend">Språk</legend><div class="setting-description"><span class="setting-icon icon-0" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6h14M5 18h14"/></svg></span><div><strong data-i18n="start.languageLegend">Språk</strong><p data-i18n="start.languageHint">Hvilke ord skal falle?</p></div></div><div class="setting-options">
         <label class="difficulty-option">
           <input type="radio" name="language" value="no" checked>
-          <span class="difficulty-name" data-i18n="start.language.no">Norsk</span>
+          <span class="flag flag-no" aria-hidden="true"></span><span class="difficulty-name" data-i18n="start.language.no">Norsk</span>
           <span class="difficulty-meta" data-i18n="start.language.noMeta">Standard</span>
         </label>
         <label class="difficulty-option">
           <input type="radio" name="language" value="en">
-          <span class="difficulty-name" data-i18n="start.language.en">English</span>
+          <span class="flag flag-en" aria-hidden="true"></span><span class="difficulty-name" data-i18n="start.language.en">English</span>
           <span class="difficulty-meta" data-i18n="start.language.enMeta">Alternative</span>
         </label>
-      </fieldset>
+      </div></fieldset>
       <fieldset class="difficulty-picker">
-        <legend class="hud-label" data-i18n="start.difficultyLegend">Vanskelighetsgrad</legend>
+        <legend class="sr-only" data-i18n="start.difficultyLegend">Vanskelighetsgrad</legend><div class="setting-description"><span class="setting-icon icon-1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 20v-5M12 20V9M19 20V3" stroke-width="4"/></svg></span><div><strong data-i18n="start.difficultyLegend">Vanskelighetsgrad</strong><p data-i18n="start.difficultyHint">Velg tempoet som passer deg</p></div></div><div class="setting-options">
         <label class="difficulty-option">
           <input type="radio" name="difficulty" value="adult" checked>
           <span class="difficulty-name" data-i18n="difficulty.adult">Voksne</span>
@@ -43,9 +54,9 @@
           <span class="difficulty-name" data-i18n="difficulty.smallKids">Små barn</span>
           <span class="difficulty-meta" data-i18n="difficulty.smallKidsMeta">25% fart</span>
         </label>
-      </fieldset>
+      </div></fieldset>
       <fieldset class="difficulty-picker">
-        <legend class="hud-label" data-i18n="start.themeLegend">Tema</legend>
+        <legend class="sr-only" data-i18n="start.themeLegend">Tema</legend><div class="setting-description"><span class="setting-icon icon-2" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></span><div><strong data-i18n="start.themeLegend">Tema</strong><p data-i18n="start.themeHint">Utseende og farger</p></div></div><div class="setting-options">
         <label class="difficulty-option">
           <input type="radio" name="theme" value="light" checked>
           <span class="difficulty-name" data-i18n="theme.light">Lys</span>
@@ -56,9 +67,9 @@
           <span class="difficulty-name" data-i18n="theme.dark">Mørk</span>
           <span class="difficulty-meta" data-i18n="theme.darkMeta">Moderne nattstil</span>
         </label>
-      </fieldset>
+      </div></fieldset>
       <fieldset class="difficulty-picker">
-        <legend class="hud-label" data-i18n="start.soundLegend">Lyd</legend>
+        <legend class="sr-only" data-i18n="start.soundLegend">Lyd</legend><div class="setting-description"><span class="setting-icon icon-3" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M11 4 6 8H3v8h3l5 4V4Zm4 4a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg></span><div><strong data-i18n="start.soundLegend">Lyd</strong><p data-i18n="start.soundHint">Lydeffekter underveis</p></div></div><div class="setting-options">
         <label class="difficulty-option">
           <input type="radio" name="sound" value="on" checked>
           <span class="difficulty-name" data-i18n="sound.on">Lyd på</span>
@@ -67,13 +78,13 @@
           <input type="radio" name="sound" value="off">
           <span class="difficulty-name" data-i18n="sound.off">Lyd av</span>
         </label>
-      </fieldset>
+      </div></fieldset>
       <div class="player-name-group">
-        <label for="player-name" class="hud-label" data-i18n="start.playerNameLabel">Spillernavn</label>
+        <div class="setting-description"><span class="setting-icon icon-4" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2Z"/></svg></span><div><label for="player-name" data-i18n="start.playerNameLabel">Spillernavn</label><p data-i18n="start.nameHint">Hva skal vi kalle deg?</p></div></div>
         <input id="player-name" class="text-input" type="text" maxlength="24" autocomplete="nickname" placeholder="Spiller">
       </div>
       <section class="leaderboard-panel">
-        <div class="leaderboard-header">
+        <div class="leaderboard-header"><span class="trophy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M7 3h10v6a5 5 0 0 1-10 0V3Zm0 2H3v3a5 5 0 0 0 5 5m9-8h4v3a5 5 0 0 1-5 5m-4 1v6m-5 1h10"/></svg></span>
           <div>
             <p class="eyebrow" data-i18n="leaderboard.eyebrow">Lokal toppliste</p>
             <h3 data-i18n="leaderboard.title">Beste runder</h3>
@@ -83,6 +94,7 @@
         <p id="leaderboard-empty" class="leaderboard-empty">Ingen resultater ennå.</p>
         <ol id="leaderboard-list" class="leaderboard-list"></ol>
       </section>
+      </div>
     </section>
 
     <section id="game-screen" class="screen" aria-label="Game screen">

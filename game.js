@@ -106,6 +106,13 @@ const storedSettings = loadStoredSettings();
 const TRANSLATIONS = {
   no: {
     'start.eyebrow': 'Norsk skrivelek',
+    'start.settings': 'Innstillinger',
+    'start.makeItYours': 'Finn din flyt',
+    'start.languageHint': 'Hvilke ord skal falle?',
+    'start.difficultyHint': 'Velg tempoet som passer deg',
+    'start.themeHint': 'Utseende og farger',
+    'start.soundHint': 'Lydeffekter underveis',
+    'start.nameHint': 'Hva skal vi kalle deg?',
     'start.title': 'Ordregn',
     'start.lead': 'Skriv ordene før de treffer bakken. Bygg opp rekker, tjen valuta og bruk hjelpeevner når skjermen blir full.',
     'start.languageLegend': 'Språk',
@@ -203,6 +210,13 @@ const TRANSLATIONS = {
   },
   en: {
     'start.eyebrow': 'Typing game',
+    'start.settings': 'Settings',
+    'start.makeItYours': 'Find your flow',
+    'start.languageHint': 'Which words will fall?',
+    'start.difficultyHint': 'Choose your own pace',
+    'start.themeHint': 'Set the mood',
+    'start.soundHint': 'Sounds while you play',
+    'start.nameHint': 'What should we call you?',
     'start.title': 'Word Rain',
     'start.lead': 'Type the falling words before they hit the ground. Build streaks, earn currency, and use abilities when the screen gets crowded.',
     'start.languageLegend': 'Language',
