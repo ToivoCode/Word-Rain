@@ -36,7 +36,9 @@ body.viewing-scores .app-shell { width: min(1180px, calc(100% - 48px)); padding:
 .scores-description { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.5; }
 .scores-filter { display: flex; flex-direction: column; gap: 8px; min-width: 170px; }
 .scores-filter label { font-size: 11px; color: var(--muted); }
-.scores-filter select { font: inherit; width: 100%; padding: 12px 16px; border: 1px solid var(--score-border); border-radius: 14px; color: inherit; background: var(--score-surface); cursor: pointer; }
+.scores-select { position: relative; }
+.scores-select::after { content: ""; position: absolute; right: 18px; top: 50%; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+.scores-filter select { appearance: none; font: inherit; width: 100%; padding: 12px 44px 12px 16px; border: 1px solid var(--score-border); border-radius: 14px; color: inherit; background: var(--score-surface); cursor: pointer; }
 .scores-toolbar { position: sticky; top: 12px; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 18px; margin-bottom: 22px; border: 1px solid var(--score-border); border-radius: 17px; background: var(--score-surface); box-shadow: 0 6px 18px #06172c14; backdrop-filter: blur(18px); }
 #leaderboard-result { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
 .scores-actions { display: flex; gap: 10px; flex-shrink: 0; }
