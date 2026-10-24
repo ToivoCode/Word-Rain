@@ -73,8 +73,9 @@
   #game-screen .shop-dialog .eyebrow, #game-screen .shop-help, #game-screen .shop-item p, #game-screen .shop-owned { color: var(--game-muted); }
   #game-screen .shop-item { background: #8baff011; border-color: var(--game-line); }
   #game-screen .secondary-button { color: var(--game-text); background: #8baff018; border-color: var(--game-line); }
-  /* Light mode retains its daytime character around the blue-hour playfield. */
+  /* Daytime artwork is limited to the desktop light-mode playfield. */
   body[data-theme='light'].game-playing { --game-surface: #ffffffd9; --game-line: #617f9c2c; --game-muted: #566e89; --game-text: #20354e; background: radial-gradient(ellipse at 50% 0%,#ffffff,transparent 70%),#e5edf4; }
+  body[data-theme='light'] #game-screen .arena { background-image: linear-gradient(#eaf5ff0d, #d8eaff15), url('assets/nordic-day.png'); }
   body[data-theme='light'] #game-screen .typed-display { color: #244875; background: #f3f7fd; border-color: #8baedc; }
   body[data-theme='light'] #game-screen .status-chip.good { color: #27765b; }
   body[data-theme='light'] #game-screen .status-chip.bad { color: #b33953; }

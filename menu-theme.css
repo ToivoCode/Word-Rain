@@ -102,3 +102,25 @@ body[data-theme] #start-screen .difficulty-option:has(input:focus-visible),
 @media (prefers-reduced-motion: reduce) {
   body[data-theme] #start-screen #start-button:hover, body[data-theme] #high-score-screen button:hover { transform: none; }
 }
+
+/* Daylight heroes share the light-mode desktop landscape. */
+body[data-theme='light'] #start-screen .start-hero,
+body[data-theme='light'] #high-score-screen .scores-hero {
+  background-image: linear-gradient(#f4f9ff80, #e7f2ffb3), url('assets/nordic-day.png');
+  color: #20354e;
+  border-color: #8baedc;
+  box-shadow: 0 16px 40px #20354e18, inset 0 1px 0 #ffffff80;
+}
+body[data-theme='light'] #start-screen .start-hero .eyebrow,
+body[data-theme='light'] #start-screen .lead,
+body[data-theme='light'] #high-score-screen .scores-hero :is(.eyebrow, .scores-description, .scores-filter label) { color: #304f71; }
+body[data-theme='light'] #high-score-screen .scores-filter select {
+  color: #20354e;
+  background: #f3f7fd;
+  border-color: #8baedc;
+}
+body[data-theme='light'] #high-score-screen .scores-trophy {
+  color: #94651b;
+  background: #ffffffd9;
+  border-color: #8baedc;
+}
