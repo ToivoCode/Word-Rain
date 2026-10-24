@@ -1,0 +1,104 @@
+/* Shared visual language for the menu and scores only.
+   Palette matches desktop-game.css; gameplay and its mobile rules are untouched. */
+body:has(#start-screen.active), body.viewing-scores {
+  --page-bg: #e5edf4;
+  --page-surface: #ffffffd9;
+  --page-inset: #f3f7fd;
+  --page-line: #617f9c2c;
+  --page-text: #20354e;
+  --page-muted: #566e89;
+  --page-accent: #345f94;
+  --page-selected: #dceaff;
+  background: radial-gradient(ellipse at 50% 0%, #ffffff, transparent 70%), var(--page-bg);
+  color: var(--page-text);
+}
+body[data-theme='dark']:has(#start-screen.active), body[data-theme='dark'].viewing-scores {
+  --page-bg: #081323;
+  --page-surface: #12213ae8;
+  --page-inset: #93b7ef0c;
+  --page-line: #8aaff32b;
+  --page-text: #edf4ff;
+  --page-muted: #a6bcdb;
+  --page-accent: #b3d5ff;
+  --page-selected: #284569;
+  background: radial-gradient(ellipse at 50% 0%, #23446d80, transparent 65%), var(--page-bg);
+}
+body[data-theme] #start-screen, body[data-theme] #high-score-screen {
+  --muted: var(--page-muted);
+  --score-surface: var(--page-surface);
+  --score-border: var(--page-line);
+  color: var(--page-text);
+}
+body:has(#start-screen.active) .app-shell { width: min(1180px, calc(100% - 64px)); padding: 28px 0 48px; }
+body[data-theme] #start-screen { max-width: none; }
+body[data-theme] #start-screen .start-scenery, body.viewing-scores::before { display: none; }
+#start-screen .start-hero {
+  overflow: hidden;
+  isolation: isolate;
+  padding: 64px 24px 48px;
+  margin-bottom: 20px;
+  border: 1px solid #83b8f378;
+  border-radius: 20px;
+  background: linear-gradient(#081b3655, #081b3680), url('assets/nordic-night.webp') center 60% / cover no-repeat;
+  box-shadow: 0 16px 40px #00000020, inset 0 0 40px #0b1b3344;
+  color: #edf4ff;
+}
+#start-screen .start-hero .eyebrow { color: #b3d5ff; }
+body[data-theme] #start-screen h1 { font-size: clamp(52px, 6vw, 76px); letter-spacing: -.035em; text-shadow: none; }
+#start-screen h1::before { content: ''; display: inline-block; width: .6em; height: .7em; margin-right: .18em; background: url('assets/game-drops.svg') center / contain no-repeat; }
+#start-screen .lead { color: #d2e3fa; max-width: 490px; }
+body[data-theme] #start-screen #start-button, body[data-theme] #high-score-screen .primary-button {
+  color: #10243f;
+  background: linear-gradient(135deg, #ffffff, #d5e5ff);
+  border: 1px solid #eef7ff;
+  box-shadow: 0 0 22px #9bc8ff25, 0 5px 14px #00122c30, inset 0 -2px 4px #85b1e526;
+  border-radius: 14px;
+}
+body[data-theme] #start-screen #start-button { padding: 15px 32px; font-size: 18px; min-width: 210px; }
+body[data-theme] #start-screen #start-button:hover, body[data-theme] #high-score-screen .primary-button:hover { background: linear-gradient(135deg, #ffffff, #b8d6ff); box-shadow: 0 0 26px #9bc8ff40; transform: translateY(-2px); }
+#start-screen .play-icon { border-left-color: #244875; }
+body[data-theme] #start-screen .start-settings { max-width: 820px; margin: 0 auto; padding: 24px; background: var(--page-surface); border: 1px solid var(--page-line); border-radius: 20px; box-shadow: 0 10px 32px #02091624, inset 0 1px 0 #ffffff08; }
+body[data-theme] #start-screen :is(.difficulty-picker, .player-name-group, .leaderboard-panel) { background: var(--page-inset); border-color: var(--page-line); border-radius: 14px; }
+body[data-theme] #start-screen .difficulty-option { color: var(--page-text); background: var(--page-inset); border-color: var(--page-line); font-family: inherit; }
+body[data-theme] #start-screen .difficulty-option:hover { background: var(--page-selected); border-color: var(--page-accent); }
+body[data-theme] #start-screen .difficulty-option:has(input:checked) { background: var(--page-selected); border-color: #81acfa; box-shadow: inset 0 1px 0 #ffffff18, 0 0 0 2px #85aaff0c; }
+body[data-theme] #start-screen .text-input { color: var(--page-text); background: var(--page-inset); border-color: var(--page-line); }
+body[data-theme] #start-screen .setting-icon { background: #81acfa18; color: var(--page-accent); border: 1px solid var(--page-line); }
+body[data-theme] #start-screen :is(.trophy-icon, .leaderboard-difficulty) { background: var(--page-inset); border: 1px solid var(--page-line); color: var(--page-accent); }
+body[data-theme] #start-screen .scores-link { color: var(--page-accent); }
+body[data-theme] :is(#start-screen, #high-score-screen) .score-points strong { color: var(--page-text); font-variant-numeric: tabular-nums; }
+body[data-theme] :is(#start-screen, #high-score-screen) .medal-4 { background: var(--page-inset); border-color: var(--page-line); }
+body[data-theme] #start-screen .word-rain { display: none; }
+body.viewing-scores .app-shell { padding: 28px 0 42px; }
+#high-score-screen .scores-hero { padding: 28px; border: 1px solid #83b8f378; border-radius: 20px; background: linear-gradient(#081b3670, #081b3699), url('assets/nordic-night.webp') center 38% / cover no-repeat; color: #edf4ff; }
+#high-score-screen .scores-hero :is(.eyebrow, .scores-description, .scores-filter label) { color: #c2d6ef; }
+body[data-theme] #high-score-screen .scores-trophy { background: #12213ac9; color: #f7ce77; border-color: #8aaff34d; box-shadow: inset 0 1px 0 #ffffff08; border-radius: 20px; }
+#high-score-screen .scores-filter select { background: #12213a; color: #edf4ff; border-color: #8aaff355; }
+#high-score-screen .scores-toolbar, #high-score-screen .score-entry { border-radius: 20px; box-shadow: 0 10px 32px #02091618, inset 0 1px 0 #ffffff08; }
+#high-score-screen .score-entry:first-child { border-color: #b69b655c; }
+#high-score-screen .secondary-button { color: var(--page-text); background: var(--page-inset); border-color: var(--page-line); }
+#high-score-screen .secondary-button:hover { background: var(--page-selected); }
+body[data-theme] #start-screen :is(button, .text-input, .scores-link):focus-visible,
+body[data-theme] #start-screen .difficulty-option:has(input:focus-visible),
+#high-score-screen :is(button, select, summary):focus-visible { outline: 2px solid #81acfa; outline-offset: 3px; }
+@media (max-width: 680px) {
+  body:has(#start-screen.active) .app-shell { width: calc(100% - 24px); padding: 12px 0 24px; }
+  #start-screen .start-hero { padding: 38px 18px 32px; margin-bottom: 14px; }
+  body[data-theme] #start-screen h1 { font-size: clamp(44px, 11vw, 65px); }
+  body[data-theme] #start-screen .start-settings { padding: 14px; }
+  #start-screen .settings-note { letter-spacing: 0; }
+  #high-score-screen .scores-hero { padding: 20px 16px; }
+  #high-score-screen .scores-filter select { min-height: 44px; }
+  #high-score-screen .scores-toolbar { position: static; }
+  #high-score-screen .scores-actions button { min-height: 44px; }
+}
+@media (max-width: 380px) {
+  #start-screen .difficulty-picker:has(input[name='difficulty']) .difficulty-option { min-width: 0; padding: 10px 6px; }
+  #start-screen .setting-description { gap: 9px; }
+  #start-screen .setting-description p { font-size: 11px; }
+  #start-screen .leaderboard-panel { padding-left: 14px; }
+  #start-screen .trophy-icon { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-theme] #start-screen #start-button:hover, body[data-theme] #high-score-screen button:hover { transform: none; }
+}
