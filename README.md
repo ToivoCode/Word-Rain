@@ -271,3 +271,11 @@ There are no frameworks, no backend, and no external dependencies.
 The game uses all 591 Norwegian and 582 English words. Each language has its own shuffled word bag. Starting another round or switching languages does not reset a bag: every word is used once before that language is reshuffled. Reloading the page starts fresh bags. Word lists are never modified by the shuffle.
 
 The script URLs in `index.html` include content versions to prevent reuse of older cached scripts. Update these versions whenever the corresponding JavaScript files change.
+
+## Browser and home-screen icons
+
+The shared icon source is assets/icon.svg. Browser tabs use the SVG or the multi-size favicon.ico fallback. iOS uses assets/apple-touch-icon.png (180 px); site.webmanifest supplies 192 px and 512 px icons for installation. All asset URLs are relative so deployment in a subdirectory works.
+
+Mobile gameplay follows the visual viewport, including keyboard resize and scroll events. The bottom home-indicator inset is reserved when the keyboard is closed and removed when the keyboard reduces the viewport. A 6 px margin remains below the controls.
+
+To verify on an iPhone, open the site in Safari and also from Add to Home Screen. Start a game, type, dismiss and reopen the keyboard, and open/close the shop. Check both themes, rotation, and returning to the menu. The controls should remain visible above the keyboard; native keyboard accessory controls are managed by iOS. Existing home-screen shortcuts may need to be re-added to refresh their cached icon. Offline play is not provided by the manifest.

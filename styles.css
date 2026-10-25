@@ -1399,3 +1399,26 @@ h3 {
     color: #5f6a76;
   }
 }
+
+/* Fit gameplay to the visible area in Safari and installed home-screen apps. */
+@media (max-width: 600px) {
+  body.game-playing {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body.game-playing #game-screen.active {
+    position: fixed;
+    top: var(--mobile-viewport-top, 0px);
+    left: 0;
+    width: 100%;
+    height: var(--mobile-viewport-height);
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+    padding-bottom: calc(env(safe-area-inset-bottom) + 6px);
+  }
+
+  html.keyboard-open body.game-playing #game-screen.active {
+    padding-bottom: 6px;
+  }
+}

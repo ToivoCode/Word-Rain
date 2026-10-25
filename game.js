@@ -1590,11 +1590,15 @@ function handleMobileTypingInput(event) {
 }
 
 function syncMobileViewportHeight() {
-  if (!window.visualViewport) {
-    return;
-  }
-
-  document.documentElement.style.setProperty('--mobile-viewport-height', `${Math.round(window.visualViewport.height)}px`);
+  const viewport = window.visualViewport;
+  const height = viewport ? viewport.height : window.innerHeight;
+  const root = document.documentElement;
+  // iOS keeps the home-indicator inset when the keyboard covers it.
+  // Only remove that inset when the visible viewport is substantially reduced.
+  const keyboardOpen = Math.max(window.innerHeight, root.clientHeight) - height > 120;
+  root.style.setProperty('--mobile-viewport-height', `${height}px`);
+  root.style.setProperty('--mobile-viewport-top', `${viewport ? viewport.offsetTop : 0}px`);
+  root.classList.toggle('keyboard-open', keyboardOpen);
 }
 
 function handleKeydown(event) {
@@ -1709,6 +1713,7 @@ window.addEventListener('resize', () => {
 });
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', syncMobileViewportHeight);
+  window.visualViewport.addEventListener('scroll', syncMobileViewportHeight);
 }
 
 window.addEventListener('gesturestart', (event) => {
